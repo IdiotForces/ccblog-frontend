@@ -45,16 +45,20 @@ define_directive_semantic('suiHeader', 'header');
 
 define_directive_semantic('menuItem', 'item');
 
-// ISDCNgSemantic.directive('menuItem', function ($compile) {
-// 	return {
-// 		template: '<div ng-transclude></div>',
-// 		transclude: true,
-// 		replace: true,
-// 		link: function (scope, element, attrs) {
-// 			element.addClass('item');
-// 		},
-// 	};
-// });
+ISDCNgSemantic.item_template_func = function (element, attrs) {
+	if ('isLink' in attrs) return '<a ng-transclude></a>';
+	else return '<div ng-transclude></div>';
+}
+
+ISDCNgSemantic.directive('menuItem', function ($compile) {
+	return {
+		template: ISDCNgSemantic.item_template_func,
+		transclude: true,
+		replace: true,
+		link: function (scope, element, attrs) {
+			element.addClass('item'); },
+	};
+});
 
 ISDCNgSemantic.directive('icon', function () {
 	return {
