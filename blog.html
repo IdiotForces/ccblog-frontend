@@ -5,12 +5,6 @@
 	<meta charset="utf-8">
 	<title>Fundamental HTML</title>
 
-	<script src="./external/jquery-2.1.1.min.js"></script>
-	<script src="./external/semantic.js"></script>
-	<script type="text/javascript" src="./external/angular.min.js"></script>
-
-	<script type="text/javascript" src="blog_demo.js"></script>
-	<script type="text/javascript" src="blog.js"></script>
 
 	<link rel="stylesheet" type="text/css" class="ui" href="./external/semantic.css">
 	<link rel="stylesheet" type="text/css" href="./external/components/dropdown.css">
@@ -76,6 +70,7 @@
 			<div class="ui simple dropdown pointing item">
 				User <i class="dropdown icon"></i>
 				<div class="menu">
+					<div class="item" onclick="$('#login-modal').modal('show');">Log In</div>
 					<div class="item"><i class="weibo icon"></i>Settings</div>
 					<div class="item"><i class="quit icon">Log Out</i></div>
 				</div>
@@ -229,9 +224,26 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
-		$('.ui.accordion').accordion();
-	</script>
+	<div class="ui small modal" id="login-modal">
+		<i class="close icon"></i>
+		<div class="header">Login</div>
+		<sui-content>
+			<p>Login into Blog:</p>
+		</sui-content>
+		<sui-actions>
+			<div class="ui black button">Cancel</div>
+			<div class="ui positive right button">Login</div>
+		</sui-actions>
+	</div>
+
+	<script type="text/javascript" src="./external/angular.min.js"></script>
+
+
+	<script src="./external/jquery-2.1.1.min.js"></script>
+	<script src="./external/semantic.js"></script>
+	<script type="text/javascript" src="blog_demo.js"></script>
+	<script type="text/javascript" src="blog_controllers.js"></script>
+	<script type="text/javascript" src="blog_index.js"></script>
 
 </body>
 

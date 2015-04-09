@@ -42,6 +42,28 @@ ISDCBlogDApp.controller('BlogController', function ($scope, myBlog) {
 	$scope.myBlog = myBlog;
 });
 
+function define_directive_semantic(name_directive, class_semantic, callback) {
+	if (typeof class_semantic == 'string')
+		class_semantic = new Array(class_semantic);
+
+	ISDCBlogDApp.directive(name_directive, function () {
+
+		return {
+			link: function (scope, element) {
+				class_semantic.forEach(function (classname, idx, array) {
+					element.addClass(classname);
+				});
+				if (callback) callback(element);
+			},
+		};
+
+	});
+}
+
+define_directive_semantic('suiActions', 'actions', function (element) 
+												{ element.css('display', 'block'); });
+define_directive_semantic('suiContent', 'content');
+
 ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScope, myBlog, articlesService, usersService, utilService, mainArticleListPages) {
 	$scope.articlesService = articlesService;
 	$scope.usersService = usersService;
