@@ -148,33 +148,76 @@
 			</div>
 
 			<!-- articles -->
-			<div class="ui divided items transition">
-				<h2>{{ myBlog.get_display_name() }}</h2>
+			<div class="ui two column grid">
+				<div class="column"> <!-- left column -->
 
-				<div class="item" ng-repeat="article in article_list_page(get_current_page())">
-					<div class="ui card image mxuser">
-						<div class="image">
-							<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
-						</div>
-						<div class="content">
-							<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
-							<div class="meta">96-12-08</div>
+					<div class="ui divided items transition">
+						<h2>{{ myBlog.get_display_name() }}</h2>
+
+						<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_odd">
+
+							<!-- user avatar etc. -->
+							<div class="ui card image mxuser">
+								<div class="image">
+									<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
+								</div>
+								<div class="content">
+									<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
+									<div class="meta">96-12-08</div>
+								</div>
+							</div>
+
+							<div class="content">
+								<a class="header">{{ article.title }}</a>
+								<div class="meta">
+									<span>{{ article.title_secondary }}</span>
+								</div>
+								<div class="description">
+									{{ article.summary }}
+								</div>
+								<div class="extra">
+									<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="content">
-						<a class="header">{{ article.title }}</a>
-						<div class="meta">
-							<span>{{ article.title_secondary }}</span>
-						</div>
-						<div class="description">
-							{{ article.summary }}
-						</div>
-						<div class="extra">
-							<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
-						</div>
-					</div>
+
 				</div>
+				<div class="ui vertical divider"></div>
+				<div class="column"> <!-- right column -->
 
+					<div class="ui divided items transition">
+
+						<h2>&nbsp;</h2>
+						<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_even">
+
+							<!-- user avatar etc. -->
+							<div class="ui card image mxuser">
+								<div class="image">
+									<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
+								</div>
+								<div class="content">
+									<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
+									<div class="meta">96-12-08</div>
+								</div>
+							</div>
+
+							<div class="content">
+								<a class="header">{{ article.title }}</a>
+								<div class="meta">
+									<span>{{ article.title_secondary }}</span>
+								</div>
+								<div class="description">
+									{{ article.summary }}
+								</div>
+								<div class="extra">
+									<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
 			</div>
 
 		</div>
@@ -275,6 +318,7 @@
 	<script type="text/javascript" src="./external/angular.min.js"></script>
 	<script src="./external/semantic.js"></script>
 	<script type="text/javascript" src="ng-semantic.js"></script>
+	<script type="text/javascript" src="ng-xoundation.js"></script>
 	<script type="text/javascript" src="blog_demo.js"></script>
 	<script type="text/javascript" src="blog_controllers.js"></script>
 	<script type="text/javascript" src="blog_index.js"></script>

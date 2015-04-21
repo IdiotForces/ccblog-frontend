@@ -72,6 +72,54 @@ var articles = [
 		date: '96-12-08',
 		category: ['基础', '人脑计算机']
 	},
+
+	{
+		author_id: 1,
+		title: '人脑计算机展望', title_secondary: '如何取得人脑的 root 权限？基础带你一探究竟。',
+		summary: 'The early chapters are organized in order of conceptual difficulty, starting',
+		date: '96-12-08',
+		category: ['基础', '人脑计算机']
+	},
+
+	{
+		author_id: 1,
+		title: '人脑计算机展望2', title_secondary: '如何取得人脑的 root 权限？基础带你一探究竟。',
+		summary: 'The early chapters are organized in order of conceptual difficulty, starting',
+		date: '96-12-08',
+		category: ['基础', '人脑计算机']
+	},
+
+	{
+		author_id: 1,
+		title: '人脑计算机展望3', title_secondary: '如何取得人脑的 root 权限？基础带你一探究竟。',
+		summary: 'The early chapters are organized in order of conceptual difficulty, starting',
+		date: '96-12-08',
+		category: ['基础', '人脑计算机']
+	},
+
+	{
+		author_id: 1,
+		title: '人脑计算机展望4', title_secondary: '如何取得人脑的 root 权限？基础带你一探究竟。',
+		summary: 'The early chapters are organized in order of conceptual difficulty, starting',
+		date: '96-12-08',
+		category: ['基础', '人脑计算机']
+	},
+
+	{
+		author_id: 1,
+		title: '人脑计算机展望5', title_secondary: '如何取得人脑的 root 权限？基础带你一探究竟。',
+		summary: 'The early chapters are organized in order of conceptual difficulty, starting',
+		date: '96-12-08',
+		category: ['基础', '人脑计算机']
+	},
+
+	{
+		author_id: 1,
+		title: '人脑计算机展望6', title_secondary: '如何取得人脑的 root 权限？基础带你一探究竟。',
+		summary: 'The early chapters are organized in order of conceptual difficulty, starting',
+		date: '96-12-08',
+		category: ['基础', '人脑计算机']
+	},
 ];
 
 ISDCBlogDemoModule.service('articlesService', function () {

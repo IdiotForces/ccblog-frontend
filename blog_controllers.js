@@ -1,4 +1,4 @@
-var ISDCBlogDApp = angular.module('isdcng.blogdemo', [ 'isdcng.blogdemo.devtest', 'isdcng.semantic.trunk' ]);
+var ISDCBlogDApp = angular.module('isdcng.blogdemo', [ 'isdcng.blogdemo.devtest', 'isdcng.xoundation.trunk', 'isdcng.semantic.trunk' ]);
 
 ISDCBlogDApp.provider('myBlog', function () {
 	this.display_name = 'ISDCBlog';
@@ -16,7 +16,7 @@ ISDCBlogDApp.provider('myBlog', function () {
 
 ISDCBlogDApp.service('mainArticleListPages', function (articlesService) {
 
-	var item_per_page = 5;
+	var item_per_page = 8;
 
 	var set_item_per_page = function (value) { item_per_page = value };
 
@@ -65,6 +65,6 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 		$scope.current_page = pn; }
 
 	$scope.article_list_page = function (pn) {
-		return articlesService.article_list((pn-1)*5, pn*5); }
+		return articlesService.article_list((pn-1)*8, pn*8); }
 
 });
