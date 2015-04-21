@@ -41,14 +41,15 @@ define_directive_semantic('suiMenu', 'menu');
 
 define_div_directive_semantic('suiSegment', 'segment');
 
+define_div_directive_semantic('field', 'field');
+
 define_directive_semantic('suiHeader', 'header');
 
 define_directive_semantic('menuItem', 'item');
 
 ISDCNgSemantic.item_template_func = function (element, attrs) {
 	if ('isLink' in attrs) return '<a ng-transclude></a>';
-	else return '<div ng-transclude></div>';
-}
+	else return '<div ng-transclude></div>'; }
 
 ISDCNgSemantic.directive('menuItem', function ($compile) {
 	return {
@@ -72,8 +73,17 @@ ISDCNgSemantic.directive('modalSmall', function () {
 		replace: true,
 
 		link: function(scope, element) {
-			$(element).modal(); }
-	}; });
+			$(element).modal({onShow: function () { $('.ui.checkbox').checkbox();}}); }
+	};
+});
+
+ISDCNgSemantic.directive('suiCheckboxInput', function() {
+	return {
+		template: '<input type="checkbox" />',
+		transclude: true,
+		replace: true,
+	};
+});
 
 define_directive_semantic('iconClose', 'close');
 
@@ -84,6 +94,8 @@ define_directive_semantic('iconTwitter', 'twitter');
 define_directive_semantic('iconDropdown', 'dropdown');
 
 define_directive_semantic('iconUpChevron', ['up', 'chevron']);
+
+define_directive_semantic('iconDownChevron', ['down', 'chevron']);
 
 define_directive_semantic('breadcrumb', ['ui', 'breadcrumb']);
 
@@ -96,3 +108,27 @@ define_directive_semantic('active', 'active');
 define_directive_semantic('suiActions', 'actions', function (element) 
 												{ element.css('display', 'block'); });
 define_directive_semantic('suiContent', 'content');
+
+ISDCNgSemantic.directive('elementNoLeftRadius', function () {
+	return {
+		link: function(scope, element) {
+			$(element).css('border-top-left-radius', '0');
+			$(element).css('border-bottom-left-radius', '0'); }
+	};
+});
+
+ISDCNgSemantic.directive('elementNoLeftBorder', function () {
+	return {
+		link: function(scope, element) {
+			$(element).css('border-left', 'none'); }
+	};
+});
+
+ISDCNgSemantic.directive('eraseBorder', function() {
+	return {
+		link: function (scope, element) {
+			if ($(element).hasClass('compact') && $(element).hasClass('button')) {
+				$(element).addClass('erase-border-for-compact-button'); }	
+		}
+	}
+});

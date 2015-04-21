@@ -5,10 +5,8 @@
 	<meta charset="utf-8">
 	<title>Fundamental HTML</title>
 
-
+	<link rel="stylesheet" type="text/css" href="./ng-semantic.css">
 	<link rel="stylesheet" type="text/css" class="ui" href="./external/semantic.css">
-
-	<!-- <script src="Foundation.js"></script> -->
 
 	<style type="text/css">
 
@@ -78,11 +76,11 @@
 	</div>
 
 	<!-- secondary topbar -->
-	<sui-segment class="header">
+	<sui-segment class="header" id="secondary-header">
 		<div class="ui menu red">
 
 			<menu-item>
-				<a href=""><icon icon-up-chevron></icon></a>
+				<a href="" onclick="$('#secondary-header').transition({ animation: 'slide down', onComplete: function () { $('#secondary-header-hidden').transition('scale'); } });"><icon icon-up-chevron></icon></a>
 			</menu-item>
 
 			<div class="item">
@@ -91,7 +89,7 @@
 						<i class="right chevron icon divider inverted"></i>
 						<a class="section">Blog</a>
 						<i class="right chevron icon divider inverted"></i>
-						<div active class="section">Index</div>
+						<div active class="section">Article List</div>
 				</breadcrumb>
 			</div>
 
@@ -106,6 +104,12 @@
 
 		</div>
 	</sui-segment>
+
+	<span class="header hidden transition" id="secondary-header-hidden">
+		<a href="" id="btn-show-secondary" onclick="$('#secondary-header-hidden').transition({ animation: 'scale', onComplete: function () { $('#secondary-header').transition('slide down'); } });" style="padding: 0.3em 1em; display: inline-block; color: black;">
+			<icon icon-down-chevron></icon>
+		</a>
+	</span>
 
 	<div class="container" ng-controller="MainArticleListController" style="max-width: 768px; margin: 2rem auto;">
 
@@ -129,7 +133,7 @@
 		<div class="ui piled segment transition">
 
 			<!-- left sidebar -->
-			<div class="ui close left rail">
+			<div class="ui close left rail" style="width: auto;">
 					<div class="ui vertical accordion menu">
 						<div class="item">
 							<a class="title">
@@ -225,7 +229,41 @@
 		<icon icon-close></icon>
 		<sui-header>Login</sui-header>
 		<sui-content>
-			<p>Login into Blog:</p>
+			<form class="ui form">
+				<p>Login into Blog:</p>
+				<field>
+					<div class="ui icon input">
+						<input type="text" placeholder="Your Username">
+						<icon class="user"></icon>
+					</div>
+				</field>
+				
+				<field>
+					<div class="ui icon input">
+						<input type="password" placeholder="Your Password">
+						<icon class="lock"></icon>
+					</div>
+				</field>
+
+				<field>
+					<div class="fields">
+						<field class="four wide">
+							<input type="text" placeholder="Check Code">
+						</field>
+						<div class="field">
+							<img src="./assets/ph_checkcode.png" />
+						</div>
+						<div style="text-align: center;" class="eight wide field">
+							<div class="ui toggle checkbox" id="login-modal-remember">
+								<sui-checkbox-input></sui-checkbox-input>
+								<label for="remember-me">Remember Me.</label>
+							</div>
+						</div>
+					</div>
+				</field>
+			</form>
+			<a style="float: left;" href="">Register</a>
+			<a style="float: right;" href="">Forget Password?</a>
 		</sui-content>
 		<sui-actions>
 			<div class="ui black button">Cancel</div>
@@ -233,9 +271,8 @@
 		</sui-actions>
 	</modal-small>
 
-	<script type="text/javascript" src="./external/angular.min.js"></script>
-
 	<script src="./external/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="./external/angular.min.js"></script>
 	<script src="./external/semantic.js"></script>
 	<script type="text/javascript" src="ng-semantic.js"></script>
 	<script type="text/javascript" src="blog_demo.js"></script>

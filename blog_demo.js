@@ -20,7 +20,7 @@ var articles = [
 	{
 		author_id: 0,
 		title: '苏共亡党亡国二十年祭', title_secondary: '苏共为何亡党亡国，以及我们从中得到的启示。',
-		summary: 'The early chapters are organized in order of conceptual difficulty, starting',
+		summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
 		date: '96-12-08',
 		category: ['毛概']
 	},
