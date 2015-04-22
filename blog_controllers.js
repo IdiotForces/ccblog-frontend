@@ -47,8 +47,30 @@ ISDCBlogDApp.service('utilService', function () {
 ISDCBlogDApp.config(function (myBlogProvider) {
 	myBlogProvider.set_display_name("示例博客"); });
 
-ISDCBlogDApp.controller('BlogController', function ($scope, myBlog) {
+ISDCBlogDApp.service('breadcrumbService', function () {
+
+	var location = [ ['Home', ''], ['Blog', ''], ['Article List'] ];
+
+	return {
+		get_locations: function ()
+			{ return location; },
+
+		set_locations: function (value) {
+			location = value; },
+
+		get_nav_article: function () {
+			return [ ['Home', ''], ['Blog', ''], ['Article - '] ]; },
+
+		get_nav_article_list: function () {
+			return [ ['Home', ''], ['Blog', ''], ['Article List'] ]; }
+	};
+});
+
+ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbService) {
 	$scope.myBlog = myBlog;
+	$scope.breadcrumbService = breadcrumbService;
+
+	$scope.breadcrumb_locations = function () { return breadcrumbService.get_locations() };
 });
 
 ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScope, myBlog, pages, articlesService, usersService, utilService, mainArticleListPages) {
@@ -79,6 +101,9 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 	$scope.jump_to_article = function (article) {
 		isdcng_blog.slide_up_disappear(document.getElementById('main-article-list'), function () {
 			isdcng_blog.slide_down_appear(document.getElementById('main-article'));
+			
+			$scope.breadcrumbService.set_locations($scope.breadcrumbService.get_nav_article());
+			$scope.$apply();
 		});
 	};
 
@@ -89,6 +114,9 @@ ISDCBlogDApp.controller('MainArticleController', function ($scope) {
 	$scope.back_to_article_list = function () {
 		isdcng_blog.slide_up_disappear(document.getElementById('main-article'), function () {
 			isdcng_blog.slide_down_appear(document.getElementById('main-article-list'));
+
+			$scope.breadcrumbService.set_locations($scope.breadcrumbService.get_nav_article_list());
+			$scope.$apply();
 		});
 	};
 

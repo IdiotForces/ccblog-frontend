@@ -60,11 +60,11 @@
 
 			<div class="item">
 				<breadcrumb>
-						<a class="section">Home</a>
-						<i class="right chevron icon divider inverted"></i>
-						<a class="section">Blog</a>
-						<i class="right chevron icon divider inverted"></i>
-						<div active class="section">Article List</div>
+					<span ng-repeat="loc in breadcrumb_locations()">
+						<div active ng-show="$last" class="section">{{ loc[0] }}</div>
+						<a ng-show="!$last" class="section">{{ loc[0] }}</a>
+						<i ng-show="!$last" class="right chevron icon divider inverted"></i>
+					</span>
 				</breadcrumb>
 			</div>
 
