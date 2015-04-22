@@ -49,7 +49,7 @@ ISDCBlogDApp.config(function (myBlogProvider) {
 
 ISDCBlogDApp.service('breadcrumbService', function () {
 
-	var location = [ ['Home', ''], ['Blog', ''], ['Article List'] ];
+	var location = [ ['Home', ''], ['Blog', ''], ['Article List', ''] ];
 
 	return {
 		get_locations: function ()
@@ -59,10 +59,10 @@ ISDCBlogDApp.service('breadcrumbService', function () {
 			location = value; },
 
 		get_nav_article: function () {
-			return [ ['Home', ''], ['Blog', ''], ['Article List', ''], ['Article - '] ]; },
+			return [ ['Home', ''], ['Blog', ''], ['Article List', ''], ['Article - ', ''] ]; },
 
 		get_nav_article_list: function () {
-			return [ ['Home', ''], ['Blog', ''], ['Article List'] ]; }
+			return [ ['Home', ''], ['Blog', ''], ['Article List', ''] ]; }
 	};
 });
 
@@ -72,7 +72,7 @@ ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbSe
 
 	$scope.current_article_id = 0;
 
-	$scope.breadcrumb_locations = function () { return breadcrumbService.get_locations() };
+	$scope.breadcrumb_locations = function () { return breadcrumbService.get_locations(); };
 });
 
 ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScope, myBlog, pages, articlesService, usersService, utilService, mainArticleListPages) {

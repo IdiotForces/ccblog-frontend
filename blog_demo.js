@@ -150,22 +150,27 @@ ISDCBlogDemoModule.service('articlesService', function () {
 		return ret;
 	};
 
+	var predefined_article = function (article_id) {
+		this.article_id = article_id; }
+
+	predefined_article.prototype = {
+		article_id: 0,
+		title: '中国花了 20 年时间打基础',
+		content: [
+			{ pid: 0, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' }
+		],
+		author_id: 0,
+		author_name: 'Windas'
+	};
+
 	return {
 		total_len: total_len,
 		article_list: article_list,
+
+		// you cannot return the predefined var directly
+		// 	or it would cause an 'infdig'
 		article_detail: function (article_id) {
-
-			return {
-				article_id: article_id,
-				title: '中国花了 20 年时间打基础',
-				content: [
-					{ pid: 0, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' }
-				],
-				author_id: 0,
-				author_name: 'Windas'
-			}
-
-		}
+			return new predefined_article(article_id); }
 	};
 });
 
