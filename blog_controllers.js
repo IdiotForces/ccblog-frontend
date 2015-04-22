@@ -51,20 +51,36 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 	$scope.current_page = 1;
 
 	$scope.get_current_page = function () {
-		return $scope.current_page; }
+		return $scope.current_page; };
 
 	$scope.prev_page = function () {
 		if ($scope.current_page != 1)
-			$scope.nav_page($scope.current_page - 1); }
+			$scope.nav_page($scope.current_page - 1); };
 
 	$scope.next_page = function () {
 		if($scope.current_page != mainArticleListPages.get_total_pages())
-			$scope.nav_page($scope.current_page + 1); }
+			$scope.nav_page($scope.current_page + 1); };
 
 	$scope.nav_page = function (pn) {
-		$scope.current_page = pn; }
+		$scope.current_page = pn; };
 
 	$scope.article_list_page = function (pn) {
-		return articlesService.article_list((pn-1)*8, pn*8); }
+		return articlesService.article_list((pn-1)*8, pn*8); };
+
+	$scope.jump_to_article = function (article) {
+		isdcng_blog.slide_up_disappear(document.getElementById('main-article-list'), function () {
+			isdcng_blog.slide_down_appear(document.getElementById('main-article'));
+		});
+	};
+
+});
+
+ISDCBlogDApp.controller('MainArticleController', function ($scope) {
+
+	$scope.back_to_article_list = function () {
+		isdcng_blog.slide_up_disappear(document.getElementById('main-article'), function () {
+			isdcng_blog.slide_down_appear(document.getElementById('main-article-list'));
+		});
+	};
 
 });

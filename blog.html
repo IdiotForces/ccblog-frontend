@@ -7,6 +7,7 @@
 
 	<link rel="stylesheet" type="text/css" href="./ng-semantic.css">
 	<link rel="stylesheet" type="text/css" class="ui" href="./external/semantic.css">
+	<link rel="stylesheet" type="text/css" class="ui" href="./isdcng-blog.css">
 
 	<style type="text/css">
 
@@ -111,7 +112,22 @@
 		</a>
 	</span>
 
-	<div class="container" ng-controller="MainArticleListController" style="max-width: 768px; margin: 2rem auto;">
+	<div hide-by-default class="ui piled segment" id="main-article" ng-controller="MainArticleController">
+			<h2>我的博文</h2>
+			<div>
+				<span>by secondwtq<span>
+				<span class="right-floated">2014-12-08</span>
+			</div>
+			<div class="ui horizontal divider">x</div>
+			<div class="paragraphs">
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</div>
+			<div class="ui horizontal divider">x</div>
+			<div class="ui button" ng-click="back_to_article_list()">Back</div>
+	</div>
+
+	<div class="container" ng-controller="MainArticleListController" style="max-width: 768px; margin: 2rem auto;" id="main-article-list">
 
 			<div class="ui menu">
 
@@ -130,7 +146,7 @@
 				</menu-item>
 			</div>
 
-		<div class="ui piled segment transition">
+		<div class="ui piled segment">
 
 			<!-- left sidebar -->
 			<div class="ui close left rail" style="width: auto;">
@@ -168,7 +184,7 @@
 							</div>
 
 							<div class="content">
-								<a class="header">{{ article.title }}</a>
+								<a class="header" ng-click="jump_to_article(article)">{{ article.title }}</a>
 								<div class="meta">
 									<span>{{ article.title_secondary }}</span>
 								</div>
@@ -280,7 +296,7 @@
 						<icon class="user"></icon>
 					</div>
 				</field>
-				
+
 				<field>
 					<div class="ui icon input">
 						<input type="password" placeholder="Your Password">
@@ -317,11 +333,11 @@
 	<script src="./external/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="./external/angular.min.js"></script>
 	<script src="./external/semantic.js"></script>
+	<script type="text/javascript" src="blog_index.js"></script>
 	<script type="text/javascript" src="ng-semantic.js"></script>
 	<script type="text/javascript" src="ng-xoundation.js"></script>
 	<script type="text/javascript" src="blog_demo.js"></script>
 	<script type="text/javascript" src="blog_controllers.js"></script>
-	<script type="text/javascript" src="blog_index.js"></script>
 
 </body>
 

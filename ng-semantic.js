@@ -105,7 +105,7 @@ define_directive_semantic('sui-small', 'small');
 
 define_directive_semantic('active', 'active');
 
-define_directive_semantic('suiActions', 'actions', function (element) 
+define_directive_semantic('suiActions', 'actions', function (element)
 												{ element.css('display', 'block'); });
 define_directive_semantic('suiContent', 'content');
 
@@ -128,7 +128,15 @@ ISDCNgSemantic.directive('eraseBorder', function() {
 	return {
 		link: function (scope, element) {
 			if ($(element).hasClass('compact') && $(element).hasClass('button')) {
-				$(element).addClass('erase-border-for-compact-button'); }	
+				$(element).addClass('erase-border-for-compact-button'); }
 		}
-	}
+	};
+});
+
+ISDCNgSemantic.directive('hideByDefault', function () {
+	return {
+		link: function (scope, element) {
+			// why must I use the index?
+			isdcng_blog.slide_hide_default(element[0]); }
+	};
 });

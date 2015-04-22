@@ -1,0 +1,29 @@
+
+.right-aligned {
+	text-align: right;
+}
+
+.right-floated {
+	float: right;
+}
+
+.paragraphs p {
+	text-indent: 2em;
+}
+
+#main-article {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.y-hidden-transition {
+	transition: max-height 1s ease-in-out;
+}
+
+.y-overflow-hidden {
+	overflow-y: hidden  !important;
+}
+
+.y-hidden {
+	max-height: 0px !important;
+}
