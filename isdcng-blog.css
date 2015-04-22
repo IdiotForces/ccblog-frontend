@@ -39,7 +39,14 @@
 	font-size: 0.6em;
 }
 
+@media only screen and (max-width: 767px) {
+	.ui > .item > .mxuser.card {
+	    width: 96px !important;
+	}
+}
+
 .y-hidden-transition {
+	-webkit-transition: max-height 1s ease-in-out;
 	transition: max-height 1s ease-in-out;
 }
 

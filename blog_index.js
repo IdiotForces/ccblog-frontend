@@ -35,9 +35,21 @@ isdcng_blog.get_element_height = function (element) {
 	}
 }
 
+isdcng_blog.settings = {
+	max_height: 2560,
+
+	max_height_with_px: function () {
+		return this.max_height + 'px'; }
+};
+
 isdcng_blog.slide_hide_default = function (element) {
 	this.add_class(element, ['y-hidden', 'y-overflow-hidden', 'y-hidden-transition']);
 	element.style.display = 'none';
+};
+
+isdcng_blog.slide_show_default = function (element) {
+	this.add_class(element, ['y-hidden-transition']);
+	element.style.maxHeight = isdcng_blog.settings.max_height_with_px();
 };
 
 isdcng_blog.slide_up_disappear = function (element, callback) {
@@ -45,14 +57,15 @@ isdcng_blog.slide_up_disappear = function (element, callback) {
 
 	this.add_class(element, 'y-hidden-transition');
 	element.style.maxHeight = this.get_element_height(element) + 'px';
+	console.log('slide disappear, element height', element.style.maxHeight);
 	setTimeout(function () {
 		that.add_class(element, ['y-overflow-hidden', 'y-hidden']);
 	}, 100);
 	setTimeout(function () {
 		element.style.display = 'none';
-		element.style.maxHeight = 'none';
+		element.style.maxHeight = isdcng_blog.settings.max_height_with_px();
 		if (callback) callback();
-	}, 1000);
+	}, 1100);
 };
 
 isdcng_blog.slide_down_appear = function (element, callback) {
@@ -69,7 +82,9 @@ isdcng_blog.slide_down_appear = function (element, callback) {
 	}, 100);
 	setTimeout(function () {
 		that.remove_class(element, 'y-overflow-hidden');
-		element.style.maxHeight = 'none';
+		element.style.maxHeight = isdcng_blog.settings.max_height_with_px();
 		if (callback) callback();
-	}, 1000);
+	}, 1100);
 };
+
+isdcng_blog.slide_show_default(document.getElementById('main-article-list'));
