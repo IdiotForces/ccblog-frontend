@@ -87,15 +87,16 @@
 	</span>
 
 	<div hide-by-default class="ui piled segment" id="main-article" ng-controller="MainArticleController">
-			<h2>我的博文</h2>
+			<h2>{{ current_article().title }}</h2>
 			<div>
-				<span>by secondwtq<span>
+				<span>by {{ current_article().author_name }}<span>
 				<span class="right-floated">2014-12-08</span>
 			</div>
 			<div class="ui horizontal divider">x</div>
 			<div class="paragraphs">
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				<p ng-repeat="paragraph in current_article().content">
+					{{ paragraph.content }}
+				</p>
 			</div>
 			<div class="ui horizontal divider">x</div>
 			<div class="ui button" ng-click="back_to_article_list()">Back</div>

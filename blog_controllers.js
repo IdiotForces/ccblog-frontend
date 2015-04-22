@@ -59,7 +59,7 @@ ISDCBlogDApp.service('breadcrumbService', function () {
 			location = value; },
 
 		get_nav_article: function () {
-			return [ ['Home', ''], ['Blog', ''], ['Article - '] ]; },
+			return [ ['Home', ''], ['Blog', ''], ['Article List', ''], ['Article - '] ]; },
 
 		get_nav_article_list: function () {
 			return [ ['Home', ''], ['Blog', ''], ['Article List'] ]; }
@@ -69,6 +69,8 @@ ISDCBlogDApp.service('breadcrumbService', function () {
 ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbService) {
 	$scope.myBlog = myBlog;
 	$scope.breadcrumbService = breadcrumbService;
+
+	$scope.current_article_id = 0;
 
 	$scope.breadcrumb_locations = function () { return breadcrumbService.get_locations() };
 });
@@ -99,9 +101,10 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 		return articlesService.article_list((pn-1)*pages.get_item_per_page(), pn*pages.get_item_per_page()); };
 
 	$scope.jump_to_article = function (article) {
+		$scope.current_article_id = article['article_id'];
 		isdcng_blog.slide_up_disappear(document.getElementById('main-article-list'), function () {
 			isdcng_blog.slide_down_appear(document.getElementById('main-article'));
-			
+
 			$scope.breadcrumbService.set_locations($scope.breadcrumbService.get_nav_article());
 			$scope.$apply();
 		});
@@ -109,7 +112,9 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 
 });
 
-ISDCBlogDApp.controller('MainArticleController', function ($scope) {
+ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesService) {
+
+	$scope.articlesService = articlesService;
 
 	$scope.back_to_article_list = function () {
 		isdcng_blog.slide_up_disappear(document.getElementById('main-article'), function () {
@@ -119,5 +124,8 @@ ISDCBlogDApp.controller('MainArticleController', function ($scope) {
 			$scope.$apply();
 		});
 	};
+
+	$scope.current_article = function () {
+		return articlesService.article_detail($scope.current_article_id); }
 
 });

@@ -11,6 +11,11 @@
 	text-indent: 2em;
 }
 
+.paragraphs p:hover {
+	color: grey;
+	cursor: pointer;
+}
+
 #main-article {
 	margin-left: 1em;
 	margin-right: 1em;
