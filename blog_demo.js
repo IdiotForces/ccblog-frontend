@@ -139,11 +139,11 @@ ISDCBlogDemoModule.service('articlesService', function () {
 
 	var total_len = function () { return articles.length; };
 	var article_list = function (start, end) {
-		if (start == null || start < 0)
+		if (start === null || start < 0)
 			start = 0;
-		if (end == null || end >= total_len())
+		if (end === null || end >= total_len())
 			end = total_len();
-		var ret = new Array();
+		var ret = [ ];
 
 		for (var i = start; i < end; i++)
 			ret.push(articles[i]);
@@ -151,7 +151,7 @@ ISDCBlogDemoModule.service('articlesService', function () {
 	};
 
 	var predefined_article = function (article_id) {
-		this.article_id = article_id; }
+		this.article_id = article_id; };
 
 	predefined_article.prototype = {
 		article_id: 0,
@@ -160,7 +160,10 @@ ISDCBlogDemoModule.service('articlesService', function () {
 			{ pid: 0, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' }
 		],
 		author_id: 0,
-		author_name: 'Windas'
+		author_name: 'Windas',
+		comments: [
+			// { content: '打基础是大事。' }
+		]
 	};
 
 	return {
@@ -177,8 +180,7 @@ ISDCBlogDemoModule.service('articlesService', function () {
 ISDCBlogDemoModule.service('usersService', function () {
 
 	var get_userinfo = function (id) {
-		return users[id];
-	}
+		return users[id]; };
 
 	return {
 		get_userinfo: get_userinfo

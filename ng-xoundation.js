@@ -4,7 +4,7 @@ ISDCNgXoundation = angular.module('isdcng.xoundation.trunk', [ ])
 		return function (items) {
 			var ret = [ ];
 			for (var i = 0; i < items.length; i++)
-				if (i % 2 == 0)
+				if (i % 2 === 0)
 					ret.push(items[i]);
 			return ret;
 		};

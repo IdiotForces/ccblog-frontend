@@ -1,10 +1,7 @@
 
-.right-aligned {
-	text-align: right;
-}
-
-.right-floated {
-	float: right;
+body {
+	background: -webkit-image-set(url(assets/background.png) 2.5x)
+			0% 0% repeat-x rgb(238, 238, 238);
 }
 
 .paragraphs p {
@@ -16,7 +13,15 @@
 	cursor: pointer;
 }
 
-#main-article {
+#secondary-header > .ui.menu {
+	background: url(assets/background-light.png) 1%;
+}
+
+.pagenav-bar {
+	background: url(assets/background-light.png) 1% !important;
+}
+
+#main-article > .ui.segment {
 	margin-left: 1em;
 	margin-right: 1em;
 }
@@ -48,6 +53,33 @@
 	.ui > .item > .mxuser.card {
 	    width: 96px !important;
 	}
+}
+
+.small-shadow {
+	box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.text-small-shadow {
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.box-inset {
+	border-radius: 3px;
+	box-shadow: inset 1px 2px 2px rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.01);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.center-aligned {
+	text-align: center;
+}
+
+.right-aligned {
+	text-align: right;
+}
+
+.right-floated {
+	float: right;
 }
 
 .y-hidden-transition {

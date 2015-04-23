@@ -3,7 +3,9 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Fundamental HTML</title>
+
+	<!-- so what the title should be ! -->
+	<title>CCBlog - Demo page</title>
 
 	<link rel="stylesheet" type="text/css" href="./ng-semantic.css">
 	<link rel="stylesheet" type="text/css" class="ui" href="./external/semantic.css">
@@ -58,11 +60,12 @@
 				<a href="" onclick="$('#secondary-header').transition({ animation: 'slide down', onComplete: function () { $('#secondary-header-hidden').transition('scale'); } });"><icon icon-up-chevron></icon></a>
 			</menu-item>
 
+			<!-- breadcrumb navigation -->
 			<div class="item">
 				<breadcrumb>
 					<span ng-repeat="loc in breadcrumb_locations()">
-						<div active ng-show="$last" class="section">{{ loc[0] }}</div>
-						<a ng-show="!$last" class="section">{{ loc[0] }}</a>
+						<div active ng-show="$last" class="section" >{{ loc[0] }}</div>
+						<a ng-show="!$last" class="section" ng-click="loc[1]()">{{ loc[0] }}</a>
 						<i ng-show="!$last" class="right chevron icon divider inverted"></i>
 					</span>
 				</breadcrumb>
@@ -80,13 +83,19 @@
 		</div>
 	</sui-segment>
 
+	<!-- secondary topbar is hidden -->
 	<span class="header hidden transition" id="secondary-header-hidden">
 		<a href="" id="btn-show-secondary" onclick="$('#secondary-header-hidden').transition({ animation: 'scale', onComplete: function () { $('#secondary-header').transition('slide down'); } });" style="padding: 0.3em 1em; display: inline-block; color: black;">
-			<icon icon-down-chevron></icon>
+			<icon icon-down-chevron class="text-small-shadow"></icon>
 		</a>
 	</span>
 
-	<div hide-by-default class="ui piled segment" id="main-article" ng-controller="MainArticleController">
+	<!-- article panel -->
+	<div hide-by-default id="main-article" ng-controller="MainArticleController" >
+		<!-- Semantic UI would remove margin Y of first and last piled segment -->
+		<div placeholder> </div>
+
+		<div id="main-article-content" class="ui piled segment">
 			<h2>{{ current_article().title }}</h2>
 			<div>
 				<span>by {{ current_article().author_name }}<span>
@@ -100,28 +109,48 @@
 			</div>
 			<div class="ui horizontal divider">x</div>
 			<div class="ui button" ng-click="back_to_article_list()">Back</div>
-	</div>
+		</div>
 
-	<div class="container" ng-controller="MainArticleListController" style="max-width: 768px; margin: 2rem auto;" id="main-article-list">
+		<!-- comments divider and comments -->
+		<div class="ui horizontal divider" style="margin-top: -1.5em;"> COMMENTS </div>
 
-			<div class="ui menu">
+		<div id="main-article-comments" class="ui segment">
 
-				<menu-item>
-
-					<div class="ui pagination menu">
-						<a class="icon item" ng-class="{ 'disabled': current_page == 1 }" ng-click="prev_page()">
-							<i class="left arrow icon" ng-class="{ 'disabled': current_page == 1 }"></i>
-						<a class="item" ng-repeat="i in utilService.rep_range(mainArticleListPages.get_total_pages()) track by $index" ng-click="nav_page($index+1)" ng-class="{ 'active': current_page == $index+1 }">{{ $index+1 }}</a>
-						</a>
-						<a class="icon item" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }" ng-click="next_page()">
-							<i class="right arrow icon" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }"></i>
-						</a>
-					</div>
-
-				</menu-item>
+			<!-- if no comment is presented -->
+			<div id="main-article-comments-none" class="box-inset"
+				ng-show="current_article().comments.length === 0" style="padding: 1em;">
+				<h3 class="center-aligned">No Comments yet.</h3>
 			</div>
 
+			<div class="ui horizontal divider"> POST A COMMENT </div>
+		</div>
+
+		<div placeholder> </div>
+	</div>
+
+	<!-- article list panel -->
+	<div class="container" ng-controller="MainArticleListController" style="max-width: 768px; margin: 2rem auto;" id="main-article-list">
+
+		<!-- top page navigation bar -->
+		<div class="ui menu pagenav-bar">
+
+			<menu-item>
+
+				<div class="ui pagination menu">
+					<a class="icon item" ng-class="{ 'disabled': current_page == 1 }" ng-click="prev_page()">
+						<i class="left arrow icon" ng-class="{ 'disabled': current_page == 1 }"></i>
+					<a class="item" ng-repeat="i in utilService.rep_range(mainArticleListPages.get_total_pages()) track by $index" ng-click="nav_page($index+1)" ng-class="{ 'active': current_page == $index+1 }">{{ $index+1 }}</a>
+					</a>
+					<a class="icon item" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }" ng-click="next_page()">
+						<i class="right arrow icon" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }"></i>
+					</a>
+				</div>
+
+			</menu-item>
+		</div>
+
 		<div class="ui piled segment">
+			<h2>{{ myBlog.get_display_name() }}</h2>
 
 			<!-- left sidebar -->
 			<div class="ui close left rail" style="width: auto;">
@@ -138,12 +167,10 @@
 					</div>
 			</div>
 
-			<!-- articles -->
-			<div class="ui two column grid">
-				<div class="column"> <!-- left column -->
+			<div ng-class="{ 'ui two column grid': is_two_column() }"> <!-- articles -->
+				<div class="column"> <!-- left column, or the primary column if there is only one col -->
 
 					<div class="ui divided items transition">
-						<h2>{{ myBlog.get_display_name() }}</h2>
 
 						<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_odd">
 
@@ -174,12 +201,11 @@
 					</div>
 
 				</div>
-				<div class="ui vertical divider"></div>
-				<div class="column"> <!-- right column -->
+				<div class="ui vertical divider" ng-show="is_two_column()"> </div>
+				<div class="column" ng-show="is_two_column()"> <!-- right column -->
 
 					<div class="ui divided items transition">
 
-						<h2>&nbsp;</h2>
 						<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_even">
 
 							<!-- user avatar etc. -->
@@ -213,7 +239,8 @@
 
 		</div>
 
-			<div class="ui menu">
+			<!-- bottom page navigation bar -->
+			<div class="ui menu pagenav-bar">
 				<div class="item">
 
 					<div class="ui pagination menu">
@@ -227,6 +254,25 @@
 					</div>
 
 				</div>
+
+				<!-- num column switch bar -->
+				<div class="right menu">
+
+						<div class="item">
+							<div class="ui menu">
+								<!-- NOTE: if you place ng-click in <i />
+										you would MUST click ON THE ICON to invoke it! -->
+								<a class="icon item" ng-click="switch_numcol(1)">
+									<i class="left arrow icon"></i>
+								</a>
+								<a class="icon item" ng-click="switch_numcol(2)">
+									<i class="right arrow icon"></i>
+								</a>
+							</div>
+						</div>
+
+				</div>
+
 			</div>
 
 	</div>
@@ -259,12 +305,12 @@
 		</div>
 	</div>
 
+	<!-- login dialog -->
 	<modal-small id="login-modal">
 		<icon icon-close></icon>
 		<sui-header>Login</sui-header>
 		<sui-content>
 			<form class="ui form">
-				<p>Login into Blog:</p>
 				<field>
 					<div class="ui icon input">
 						<input type="text" placeholder="Your Username">
@@ -281,7 +327,7 @@
 
 				<field>
 					<div class="fields">
-						<field class="four wide">
+						<field class="five wide">
 							<input type="text" placeholder="Check Code">
 						</field>
 						<div class="field">
@@ -295,8 +341,21 @@
 						</div>
 					</div>
 				</field>
+
+				<field>
+					<div class="fields">
+						<field>
+							Or Login With:
+						</field>
+						<field>
+							<div class="ui compact button">Google</div>
+							<div class="ui compact button">GitHub</div>
+							<div class="ui compact button">Facebook</div>
+						</field>
+					</div>
+				</field>
 			</form>
-			<a style="float: left;" href="">Register</a>
+			<a href="">Register</a>
 			<a style="float: right;" href="">Forget Password?</a>
 		</sui-content>
 		<sui-actions>
@@ -305,6 +364,10 @@
 		</sui-actions>
 	</modal-small>
 
+	<!-- JavaScripts -->
+	<!-- placed at last of page, to speed up loading -->
+
+	<!-- external scripts, foundation scripts, then page-specific scripts -->
 	<script src="./external/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="./external/angular.min.js"></script>
 	<script src="./external/semantic.js"></script>
