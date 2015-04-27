@@ -55,6 +55,27 @@ body {
 	}
 }
 
+.slides {
+	overflow: hidden;
+}
+
+.slide-wrapper {
+	width: 6666px;
+}
+
+.slide-wrapper::after, .slide-wrapper::after {
+	clear: both;
+	display: table;
+	content: '';
+}
+
+.slide-page {
+	transition: all 0.3s ease-in-out;
+	float: left;
+	position: relative;
+	left: 0px;
+}
+
 .small-shadow {
 	box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 2px 2px 0 rgba(0, 0, 0, 0.1);
 }

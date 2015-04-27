@@ -44,7 +44,7 @@
 			<div class="ui simple dropdown pointing item">
 				User <icon icon-dropdown></icon>
 				<sui-menu>
-					<menu-item onclick="$('#login-modal').modal('show');">Log In</menu-item>
+					<menu-item onclick="$('#login-modal').modal('show', function () { isdcng_blog.slide_initialize_parent(document.getElementsByClassName('slides')[0]); });">Log In</menu-item>
 					<menu-item><icon icon-weibo></icon>Settings</menu-item>
 					<menu-item><i class="quit icon">Log Out</i></menu-item>
 				</sui-menu>
@@ -309,55 +309,102 @@
 	<modal-small id="login-modal">
 		<icon icon-close></icon>
 		<sui-header>Login</sui-header>
-		<sui-content>
-			<form class="ui form">
-				<field>
-					<div class="ui icon input">
-						<input type="text" placeholder="Your Username">
-						<icon class="user"></icon>
-					</div>
-				</field>
 
-				<field>
-					<div class="ui icon input">
-						<input type="password" placeholder="Your Password">
-						<icon class="lock"></icon>
-					</div>
-				</field>
+		<sui-content style="overflow: hidden;">
+			<div class="slides">
+				<div class="slide-wrapper">
 
-				<field>
-					<div class="fields">
-						<field class="five wide">
-							<input type="text" placeholder="Check Code">
-						</field>
-						<div class="field">
-							<img src="./assets/ph_checkcode.png" />
-						</div>
-						<div style="text-align: center;" class="eight wide field">
-							<div class="ui toggle checkbox" id="login-modal-remember">
-								<sui-checkbox-input></sui-checkbox-input>
-								<label for="remember-me">Remember Me.</label>
-							</div>
-						</div>
-					</div>
-				</field>
+					<div class="slide-page" style="padding: 1em;">
+						<form class="ui form">
+							<field>
+								<div class="ui icon input">
+									<input type="text" placeholder="Your Username">
+									<icon class="user"></icon>
+								</div>
+							</field>
 
-				<field>
-					<div class="fields">
-						<field>
-							Or Login With:
-						</field>
-						<field>
-							<div class="ui compact button">Google</div>
-							<div class="ui compact button">GitHub</div>
-							<div class="ui compact button">Facebook</div>
-						</field>
+							<field>
+								<div class="ui icon input">
+									<input type="password" placeholder="Your Password">
+									<icon class="lock"></icon>
+								</div>
+							</field>
+
+							<field>
+								<div class="fields">
+									<field class="five wide">
+										<input type="text" placeholder="Check Code">
+									</field>
+									<div class="field">
+										<img src="./assets/ph_checkcode.png" />
+									</div>
+									<div style="text-align: center;" class="eight wide field">
+										<div class="ui toggle checkbox" id="login-modal-remember">
+											<sui-checkbox-input></sui-checkbox-input>
+											<label for="remember-me">Remember Me.</label>
+										</div>
+									</div>
+								</div>
+							</field>
+
+							<field>
+								<div class="fields">
+									<field>
+										Or Login With:
+									</field>
+									<field>
+										<div class="ui compact button">Google</div>
+										<div class="ui compact button">GitHub</div>
+										<div class="ui compact button">Facebook</div>
+									</field>
+								</div>
+							</field>
+						</form>
+						<a href="" onclick="isdcng_blog.slide_to_next(this);">Register</a>
+						<a style="float: right;" href="">Forget Password?</a>
 					</div>
-				</field>
-			</form>
-			<a href="">Register</a>
-			<a style="float: right;" href="">Forget Password?</a>
+
+					<div class="slide-page" style="padding: 1em;">
+						<form class="ui form">
+							<field>
+								<div class="ui icon input">
+									<input type="text" placeholder="Your Username">
+									<icon class="user"></icon>
+								</div>
+							</field>
+
+							<field>
+								<div class="ui icon input">
+									<input type="password" placeholder="Your Password">
+									<icon class="lock"></icon>
+								</div>
+							</field>
+
+							<field>
+								<div class="ui icon input">
+									<input type="email" placeholder="Your E-Mail">
+									<icon class="mail"></icon>
+								</div>
+							</field>
+
+							<field>
+								<div class="fields">
+									<field class="five wide">
+										<input type="text" placeholder="Check Code">
+									</field>
+									<div class="field">
+										<img src="./assets/ph_checkcode.png" />
+									</div>
+								</div>
+							</field>
+
+						</form>
+					</div>
+
+				</div>
+			</div>
 		</sui-content>
+
 		<sui-actions>
 			<div class="ui black button">Cancel</div>
 			<div class="ui positive right button">Login</div>
