@@ -16,7 +16,7 @@
 <body ng-controller="BlogController">
 
 	<!-- top navbar -->
-	<div class="ui menu red inverted" style="margin: 0;">
+	<div id="header" class="ui menu">
 		<menu-item>
 			CC
 		</menu-item>
@@ -53,35 +53,33 @@
 	</div>
 
 	<!-- secondary topbar -->
-	<sui-segment class="header" id="secondary-header">
-		<div class="ui menu red">
+	<div id="secondary-header" class="ui menu">
 
-			<menu-item>
-				<a href="" onclick="$('#secondary-header').transition({ animation: 'slide down', onComplete: function () { $('#secondary-header-hidden').transition('scale'); } });"><icon icon-up-chevron></icon></a>
-			</menu-item>
+		<menu-item>
+			<a href="" onclick="$('#secondary-header').transition({ animation: 'slide down', onComplete: function () { $('#secondary-header-hidden').transition('scale'); } });"><icon icon-up-chevron></icon></a>
+		</menu-item>
 
-			<!-- breadcrumb navigation -->
-			<div class="item">
-				<breadcrumb>
-					<span ng-repeat="loc in breadcrumb_locations()">
-						<div active ng-show="$last" class="section" >{{ loc[0] }}</div>
-						<a ng-show="!$last" class="section" ng-click="loc[1]()">{{ loc[0] }}</a>
-						<i ng-show="!$last" class="right chevron icon divider inverted"></i>
-					</span>
-				</breadcrumb>
-			</div>
-
-			<div class="right menu">
-				<menu-item>
-					<div class="ui input icon">
-						<input class="prompt" type="text" placeholder="Search..." >
-						<i class="search link icon"></i>
-					</div>
-				</menu-item>
-			</div>
-
+		<!-- breadcrumb navigation -->
+		<div class="item">
+			<breadcrumb>
+				<span ng-repeat="loc in breadcrumb_locations()">
+					<div active ng-show="$last" class="section" >{{ loc[0] }}</div>
+					<a ng-show="!$last" class="section" ng-click="loc[1]()">{{ loc[0] }}</a>
+					<i ng-show="!$last" class="right chevron icon divider inverted"></i>
+				</span>
+			</breadcrumb>
 		</div>
-	</sui-segment>
+
+		<div class="right menu">
+			<menu-item>
+				<div class="ui input icon">
+					<input class="prompt" type="text" placeholder="Search..." >
+					<i class="search link icon"></i>
+				</div>
+			</menu-item>
+		</div>
+
+	</div>
 
 	<!-- secondary topbar is hidden -->
 	<span class="header hidden transition" id="secondary-header-hidden">
@@ -90,157 +88,191 @@
 		</a>
 	</span>
 
-	<!-- article panel -->
-	<div hide-by-default id="main-article" ng-controller="MainArticleController" >
-		<!-- Semantic UI would remove margin Y of first and last piled segment -->
-		<div placeholder> </div>
+<div class="wrap iclearfix" style="max-width: 1280px; margin: 0 auto;">
 
-		<div id="main-article-content" class="ui piled segment">
-			<h2>{{ current_article().title }}</h2>
-			<div>
-				<span>by {{ current_article().author_name }}<span>
-				<span class="right-floated">2014-12-08</span>
+	<!-- left sidebar -->
+	<div class="left-floated" style="z-index: 100;">
+		<div class="ui vertical accordion menu">
+			<div class="item">
+				<a class="title">
+					<i class="dropdown icon"></i>
+					新儒学
+				</a>
+				<div class="content menu">
+					<menu-item is-link href="">新儒学</menu-item>
+					<menu-item is-link href="">新儒学</menu-item>
+					<menu-item is-link href="">新儒学</menu-item>
+					<menu-item is-link href="">新儒学</menu-item>
+				</div>
 			</div>
-			<div class="ui horizontal divider">x</div>
-			<div class="paragraphs">
-				<p ng-repeat="paragraph in current_article().content">
-					{{ paragraph.content }}
-				</p>
-			</div>
-			<div class="ui horizontal divider">x</div>
-			<div class="ui button" ng-click="back_to_article_list()">Back</div>
 		</div>
+	</div> <!-- left sidebar -->
 
-		<!-- comments divider and comments -->
-		<div class="ui horizontal divider" style="margin-top: -1.5em;"> COMMENTS </div>
+	<!-- stackoverflow.com/questions/6421966/css-overflow-x-visible-and-overflow-y-hidden-causing-scrollbar-issue -->
+	<!-- or sliding with sidebar got very ugly because of `overflow-y: hidden` -->
+	<div class="wrap" style="max-width: 768px; margin: 2rem auto;">
 
-		<div id="main-article-comments" class="ui segment">
+		<!-- article panel -->
+		<div class="container" hide-by-default ng-controller="MainArticleController" id="main-article" >
+			<!-- Semantic UI would remove margin Y of first and last piled segment -->
+			<!-- 0427: but wo dont need it anymore since it's unified with article list now -->
+			<!-- <div placeholder> </div> -->
 
-			<!-- if no comment is presented -->
-			<div id="main-article-comments-none" class="box-inset"
-				ng-show="current_article().comments.length === 0" style="padding: 1em;">
-				<h3 class="center-aligned">No Comments yet.</h3>
-			</div>
-
-			<div class="ui horizontal divider"> POST A COMMENT </div>
-		</div>
-
-		<div placeholder> </div>
-	</div>
-
-	<!-- article list panel -->
-	<div class="container" ng-controller="MainArticleListController" style="max-width: 768px; margin: 2rem auto;" id="main-article-list">
-
-		<!-- top page navigation bar -->
-		<div class="ui menu pagenav-bar">
-
-			<menu-item>
-
-				<div class="ui pagination menu">
-					<a class="icon item" ng-class="{ 'disabled': current_page == 1 }" ng-click="prev_page()">
-						<i class="left arrow icon" ng-class="{ 'disabled': current_page == 1 }"></i>
-					<a class="item" ng-repeat="i in utilService.rep_range(mainArticleListPages.get_total_pages()) track by $index" ng-click="nav_page($index+1)" ng-class="{ 'active': current_page == $index+1 }">{{ $index+1 }}</a>
+			<div id="main-article-content" class="ui piled segment">
+				<div class="ui text menu context-ops">
+					<a class="item" ng-click="back_to_article_list()">
+						<icon class="angle left"></icon> Back
 					</a>
-					<a class="icon item" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }" ng-click="next_page()">
-						<i class="right arrow icon" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }"></i>
+					<div class="ui text right menu context-ops">
+						<a class="item">
+							<icon class="thumbs up"></icon> Like
+						</a>
+						<a class="item">
+							<icon class="thumbs down"></icon> Dislike
+						</a>
+					</div>
+				</div>
+				<div class="ui large header">
+					<div class="content">{{ current_article().title }}</div>
+					<div class="sub header">论基础的重要性</div>
+				</div>
+				<div class="ui horizontal divider">x</div>
+				<div class="paragraphs">
+					<p ng-repeat="paragraph in current_article().content">
+						{{ paragraph.content }}
+					</p>
+				</div>
+				<div class="ui horizontal divider">by <a href="">{{ current_article().author_name }}</a> 2014-12-08</div>
+				<div class="ui text menu context-ops">
+					<a class="item" ng-click="back_to_article_list()">
+						<icon class="angle left"></icon> Back
 					</a>
-				</div>
-
-			</menu-item>
-		</div>
-
-		<div class="ui piled segment">
-			<h2>{{ myBlog.get_display_name() }}</h2>
-
-			<!-- left sidebar -->
-			<div class="ui close left rail" style="width: auto;">
-					<div class="ui vertical accordion menu">
-						<div class="item">
-							<a class="title">
-								<i class="dropdown icon"></i>
-								新儒学
-							</a>
-							<div class="content menu">
-								<menu-item is-link href="">新儒学</menu-item>
-							</div>
-						</div>
+					<div class="ui text right menu context-ops">
+						<a class="item">
+							<icon class="thumbs up"></icon> Like
+						</a>
+						<a class="item">
+							<icon class="thumbs down"></icon> Dislike
+						</a>
 					</div>
-			</div>
-
-			<div ng-class="{ 'ui two column grid': is_two_column() }"> <!-- articles -->
-				<div class="column"> <!-- left column, or the primary column if there is only one col -->
-
-					<div class="ui divided items transition">
-
-						<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_odd">
-
-							<!-- user avatar etc. -->
-							<div class="ui card image mxuser">
-								<div class="image">
-									<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
-								</div>
-								<div class="content">
-									<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
-									<div class="meta">96-12-08</div>
-								</div>
-							</div>
-
-							<div class="content">
-								<a class="header" ng-click="jump_to_article(article)">{{ article.title }}</a>
-								<div class="meta">
-									<span>{{ article.title_secondary }}</span>
-								</div>
-								<div class="description">
-									{{ article.summary }}
-								</div>
-								<div class="extra">
-									<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-				<div class="ui vertical divider" ng-show="is_two_column()"> </div>
-				<div class="column" ng-show="is_two_column()"> <!-- right column -->
-
-					<div class="ui divided items transition">
-
-						<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_even">
-
-							<!-- user avatar etc. -->
-							<div class="ui card image mxuser">
-								<div class="image">
-									<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
-								</div>
-								<div class="content">
-									<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
-									<div class="meta">96-12-08</div>
-								</div>
-							</div>
-
-							<div class="content">
-								<a class="header">{{ article.title }}</a>
-								<div class="meta">
-									<span>{{ article.title_secondary }}</span>
-								</div>
-								<div class="description">
-									{{ article.summary }}
-								</div>
-								<div class="extra">
-									<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
-								</div>
-							</div>
-						</div>
-					</div>
-
 				</div>
 			</div>
 
+			<!-- comments divider and comments -->
+			<div class="ui horizontal divider" style="margin-top: -1.5em;"> COMMENTS </div>
+
+			<div id="main-article-comments" class="ui segment">
+
+				<!-- if no comment is presented -->
+				<div id="main-article-comments-none" class="box-inset"
+					ng-show="current_article().comments.length === 0" style="padding: 1em;">
+					<h3 class="center-aligned">No Comments yet.</h3>
+				</div>
+
+				<div class="ui horizontal divider"> POST A COMMENT </div>
+			</div>
+
+			<!-- <div placeholder> </div> -->
 		</div>
+
+		<!-- article list panel -->
+		<div class="container" ng-controller="MainArticleListController" id="main-article-list">
+			<!-- top page navigation bar -->
+			<div class="ui menu pagenav-bar small-shadow">
+
+				<menu-item>
+
+					<div class="ui pagination menu">
+						<a class="icon item" ng-class="{ 'disabled': current_page == 1 }" ng-click="prev_page()">
+							<i class="left arrow icon" ng-class="{ 'disabled': current_page == 1 }"></i>
+						<a class="item" ng-repeat="i in utilService.rep_range(mainArticleListPages.get_total_pages()) track by $index" ng-click="nav_page($index+1)" ng-class="{ 'active': current_page == $index+1 }">{{ $index+1 }}</a>
+						</a>
+						<a class="icon item" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }" ng-click="next_page()">
+							<i class="right arrow icon" ng-class="{ 'disabled': current_page == mainArticleListPages.get_total_pages() }"></i>
+						</a>
+					</div>
+
+				</menu-item>
+			</div> <!-- top page navigation bar -->
+
+			<!-- article list segment -->
+			<div class="ui piled segment">
+				<h2>{{ myBlog.get_display_name() }}</h2>
+
+				<div ng-class="{ 'ui two column grid': is_two_column() }"> <!-- articles -->
+					<div class="column"> <!-- left column, or the primary column if there is only one col -->
+
+						<div class="ui divided items transition">
+
+							<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_odd">
+
+								<!-- user avatar etc. -->
+								<div class="ui card image mxuser">
+									<div class="image">
+										<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
+									</div>
+									<div class="content">
+										<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
+										<div class="meta">96-12-08</div>
+									</div>
+								</div>
+
+								<div class="content">
+									<a class="header" ng-click="jump_to_article(article)">{{ article.title }}</a>
+									<div class="meta">
+										<span>{{ article.title_secondary }}</span>
+									</div>
+									<div class="description">
+										{{ article.summary }}
+									</div>
+									<div class="extra">
+										<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!-- <div class="ui vertical divider" ng-show="is_two_column()"> </div> -->
+					<div class="column" ng-show="is_two_column()"> <!-- right column -->
+
+						<div class="ui divided items transition">
+
+							<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_even">
+
+								<!-- user avatar etc. -->
+								<div class="ui card image mxuser">
+									<div class="image">
+										<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
+									</div>
+									<div class="content">
+										<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
+										<div class="meta">96-12-08</div>
+									</div>
+								</div>
+
+								<div class="content">
+									<a class="header">{{ article.title }}</a>
+									<div class="meta">
+										<span>{{ article.title_secondary }}</span>
+									</div>
+									<div class="description">
+										{{ article.summary }}
+									</div>
+									<div class="extra">
+										<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div> <!-- article list segment -->
 
 			<!-- bottom page navigation bar -->
-			<div class="ui menu pagenav-bar">
+			<div class="ui menu pagenav-bar small-shadow">
 				<div class="item">
 
 					<div class="ui pagination menu">
@@ -257,41 +289,38 @@
 
 				<!-- num column switch bar -->
 				<div class="right menu">
-
 						<div class="item">
+
 							<div class="ui menu">
 								<!-- NOTE: if you place ng-click in <i />
 										you would MUST click ON THE ICON to invoke it! -->
 								<a class="icon item" ng-click="switch_numcol(1)">
-									<i class="left arrow icon"></i>
+									<icon class="list"></icon>
 								</a>
 								<a class="icon item" ng-click="switch_numcol(2)">
-									<i class="right arrow icon"></i>
+									<icon class="grid layout"></icon>
 								</a>
 							</div>
+
 						</div>
+				</div> <!-- num column switch bar -->
+			</div> <!-- bottom page navigation bar -->
 
-				</div>
-
-			</div>
-
+		</div> <!-- article list panel -->
 	</div>
 
+</div>
+
 	<!-- footer -->
-	<div class="ui inverted red footer vertical segment">
+	<div class="ui tertiary inverted footer vertical segment">
 		<div class="ui stackablecenter aligned page grid">
 
 			<div class="row">
 				<div class="column">
 					<div class="ui horizontal divided relaxed red list inverted">
 
-						<menu-item>
-							<a href="">四川大学</a>
-						</menu-item>
-
-						<menu-item>
-							<a href="">SCU ISDC</a>
-						</menu-item>
+						<menu-item> <a href="">四川大学</a> </menu-item>
+						<menu-item> <a href="">SCU ISDC</a> </menu-item>
 
 					</div>
 				</div>
@@ -303,17 +332,18 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> <!-- footer -->
 
-	<!-- login dialog -->
+	<!-- login & register dialog -->
 	<modal-small id="login-modal">
 		<icon icon-close></icon>
 		<sui-header>Login</sui-header>
 
-		<sui-content style="overflow: hidden;">
+		<sui-content>
 			<div class="slides">
 				<div class="slide-wrapper">
 
+					<!-- login page -->
 					<div class="slide-page" style="padding: 1em;">
 						<form class="ui form">
 							<field>
@@ -353,17 +383,24 @@
 										Or Login With:
 									</field>
 									<field>
-										<div class="ui compact button">Google</div>
-										<div class="ui compact button">GitHub</div>
-										<div class="ui compact button">Facebook</div>
+										<div class="ui circular google plus icon button">
+											<icon class="google plus"></icon>
+										</div>
+										<div class="ui circular github icon button">
+											<icon class="github alternate"></icon>
+										</div>
+										<div class="ui circular facebook icon button">
+											<icon class="facebook"></icon>
+										</div>
 									</field>
 								</div>
 							</field>
 						</form>
 						<a href="" onclick="isdcng_blog.slide_to_next(this);">Register</a>
 						<a style="float: right;" href="">Forget Password?</a>
-					</div>
+					</div> <!-- login page -->
 
+					<!-- register page -->
 					<div class="slide-page" style="padding: 1em;">
 						<form class="ui form">
 							<field>
@@ -399,7 +436,7 @@
 							</field>
 
 						</form>
-					</div>
+					</div> <!-- register page -->
 
 				</div>
 			</div>
@@ -409,7 +446,7 @@
 			<div class="ui black button">Cancel</div>
 			<div class="ui positive right button">Login</div>
 		</sui-actions>
-	</modal-small>
+	</modal-small> <!-- login & register dialog -->
 
 	<!-- JavaScripts -->
 	<!-- placed at last of page, to speed up loading -->

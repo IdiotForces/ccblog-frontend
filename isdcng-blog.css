@@ -13,17 +13,38 @@ body {
 	cursor: pointer;
 }
 
-#secondary-header > .ui.menu {
+#secondary-header {
 	background: url(assets/background-light.png) 1%;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	box-shadow: inset rgba(0, 0, 0, 0.1) 0 -2px 4px, 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+	margin: 0;
 }
 
 .pagenav-bar {
 	background: url(assets/background-light.png) 1% !important;
+
+	/* http://stackoverflow.com/questions/11024867/clear-child-floats-without-clearing-external-floats */
+	/* or SUI will "fix" the float of sidebar */
+	overflow: auto;
 }
 
 #main-article > .ui.segment {
-	margin-left: 1em;
-	margin-right: 1em;
+
+}
+
+#header {
+	border-radius: 0;
+	margin: 0;
+	background: linear-gradient(rgba(255, 255, 255, 1.0) 0%, rgba(196, 196, 196, 1.0) 100%);
+	box-shadow: rgba(0, 0, 0, 0.3) 0 3px 2px;
+	z-index: 100;
+	position: relative;
+}
+
+.footer {
+    box-shadow: inset rgba(0, 0, 0, 0.2) 0 6px 4px !important;
+    background: linear-gradient(rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.5) 100%) !important;
 }
 
 .secondary-img {
@@ -55,6 +76,11 @@ body {
 	}
 }
 
+.ui.text.menu.context-ops {
+	display: block;
+	margin: 0;
+}
+
 .slides {
 	overflow: hidden;
 }
@@ -63,7 +89,7 @@ body {
 	width: 6666px;
 }
 
-.slide-wrapper::after, .slide-wrapper::after {
+.slide-wrapper::after {
 	clear: both;
 	display: table;
 	content: '';
@@ -76,8 +102,20 @@ body {
 	left: 0px;
 }
 
+.iclearfix { }
+
+.iclearfix:after {
+	display: table;
+	content: '';
+	clear: both;
+}
+
 .small-shadow {
-	box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 2px 2px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 0px 1px 1px rgba(39, 41, 43, 0.15), 0px 2px 2px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.large-shadow {
+	box-shadow: 0px 0px 1px 1px rgba(39, 41, 43, 0.2), 2px 2px 4px 4px rgba(0, 0, 0, 0.15) !important;
 }
 
 .text-small-shadow {
@@ -99,16 +137,23 @@ body {
 	text-align: right;
 }
 
+.left-floated {
+	float: left;
+}
+
 .right-floated {
 	float: right;
 }
 
 .y-hidden-transition {
+	/*overflow-x: visible !important;*/
+	/*overflow-y: hidden  !important;*/
 	-webkit-transition: max-height 1s ease-in-out;
 	transition: max-height 1s ease-in-out;
 }
 
 .y-overflow-hidden {
+	/*overflow-x: visible !important;*/
 	overflow-y: hidden  !important;
 }
 
