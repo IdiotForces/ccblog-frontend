@@ -119,12 +119,18 @@ isdcng_blog.find_ans_with_cls = function (element, klass) {
 isdcng_blog.slide_to_next = function (element) {
 	var ele_thispage = this.find_ans_with_cls(element, 'slide-page');
 	var ele_wrapper = ele_thispage.parentElement;
+	var ele_nextpage = ele_thispage.nextElementSibling;
 
 	var org_width = this.get_element_width(ele_thispage);
 	this.iter_children(ele_wrapper, function (page) {
 		var org_left = parseInt(page.ownerDocument.defaultView.getComputedStyle(page, null).getPropertyValue('left').replace('px', ''));
 		page.style.left = (org_left - org_width) + 'px';
 	});
+
+	// '.slide-wrapper' height
+	ele_wrapper.style.height = ele_nextpage.offsetHeight + 'px';
+	// '.slides' height
+	ele_wrapper.parentElement.style.height = ele_nextpage.offsetHeight + 'px';
 };
 
 // slide left to previous '.slide-page'
@@ -160,10 +166,12 @@ isdcng_blog.slide_initialize_parent = function (element) {
 	element = element.getElementsByClassName('slide-wrapper')[0];
 
 	element.style.width = '100%';
+	element.style.height = 'auto';
 
 	this.iter_children(element, function (child) {
 		child.style.width = element.offsetWidth + 'px';
 	});
+	element.style.height = element.firstElementChild.offsetHeight;
 
 	element.style.width = '6666px';
 }
