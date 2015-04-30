@@ -33,6 +33,10 @@ body {
 
 }
 
+#main-article-content {
+	margin-bottom: 2em;
+}
+
 #header {
 	border-radius: 0;
 	margin: 0;
@@ -45,6 +49,34 @@ body {
 .footer {
     box-shadow: inset rgba(0, 0, 0, 0.2) 0 6px 4px !important;
     background: linear-gradient(rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.5) 100%) !important;
+}
+
+/* *Article Panel - Comment Container Style* */
+.article-paragraph-comment-container {
+	background: url(assets/light_linen-1024x1024.png);
+	/*background-size:  ;*/
+	border-radius: 6px !important;
+	padding: 1em;
+
+	position: relative;
+}
+
+.article-paragraph-comment-container-wrapper:before {
+	background: url(assets/light_linen-1024x1024.png);
+	box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.12);
+	/* background-size: 192px 192px; */
+	border-radius: 2px;
+
+	width: 1.4em;
+	height: 1.4em;
+	top: 0.75em;
+	left: 1.4em;
+
+	transform: rotate(45deg);
+	position: relative;
+	content: '';
+	display: block;
+	z-index: 0;
 }
 
 .secondary-img {
@@ -79,10 +111,13 @@ body {
 .ui.text.menu.context-ops {
 	display: block;
 	margin: 0;
+	/* the same as '.pagenav-bar' */
+	overflow: auto;
 }
 
 .slides {
 	overflow: hidden;
+	transition: all 0.3s ease-in-out;
 }
 
 .slide-wrapper {

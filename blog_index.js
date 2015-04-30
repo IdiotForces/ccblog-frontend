@@ -14,6 +14,9 @@ isdcng_blog.add_class = function (element, classes) {
 isdcng_blog.remove_class = function (element, classes) {
 	this.amap(function (cls) { element.classList.remove(cls); }, classes); };
 
+isdcng_blog.has_class = function (element, klass) {
+	return element.classList.contains(klass); };
+
 isdcng_blog.get_element_height = function (element) {
 	var style = window.getComputedStyle(element);
 
@@ -81,7 +84,7 @@ isdcng_blog.slide_up_disappear = function (element, callback) {
 	console.log('slide disappear, element height', element.style.maxHeight);
 	setTimeout(function () {
 		that.add_class(element, ['y-overflow-hidden', 'y-hidden']);
-	}, 100);
+	}, 10);
 	setTimeout(function () {
 		element.style.display = 'none';
 		element.style.maxHeight = isdcng_blog.settings.max_height_with_px();
@@ -108,11 +111,23 @@ isdcng_blog.slide_down_appear = function (element, callback) {
 	}, 1100);
 };
 
-// http://stackoverflow.com/questions/22119673/find-the-closest-ancestor-element-that-has-a-specific-class
+// stackoverflow.com/questions/22119673/find-the-closest-ancestor-element-that-has-a-specific-class
 isdcng_blog.find_ans_with_cls = function (element, klass) {
 	while ((element = element.parentElement) && !element.classList.contains(klass))
 		;
 	return element;
+};
+
+// iterate elements children with func (element)
+// support an optional filter (element) -> boolean
+isdcng_blog.iter_children = function (element, func, filter) {
+	if (filter === undefined) filter = function () {
+		return true; };
+	var ele_current = element.firstElementChild;
+	while (ele_current) {
+		if (filter(ele_current) === true) func(ele_current);
+		ele_current = ele_current.nextElementSibling;
+	}
 };
 
 // slide right to next '.slide-page'
@@ -141,22 +156,20 @@ isdcng_blog.slide_to_prev = function (element) {
 	var ele_current = ele_wrapper.firstElementChild;
 	var org_width = this.get_element_width(ele_thispage);
 
+	var ele_prevpage;
+
 	this.iter_children(ele_wrapper, function (page) {
 		var org_left = parseInt(page.ownerDocument.defaultView.getComputedStyle(page, null).getPropertyValue('left').replace('px', ''));
 		page.style.left = (org_left + org_width) + 'px';
-	});
-};
 
-// iterate elements children with func (element)
-// support an optional filter (element) -> boolean
-isdcng_blog.iter_children = function (element, func, filter) {
-	if (filter === undefined) filter = function () {
-		return true; };
-	var ele_current = element.firstElementChild;
-	while (ele_current) {
-		if (filter(ele_current) === true) func(ele_current);
-		ele_current = ele_current.nextElementSibling;
-	}
+		if (page.nextElementSibling == ele_thispage) {
+			ele_prevpage = page; }
+	});
+
+	// '.slide-wrapper' height
+	ele_wrapper.style.height = ele_prevpage.offsetHeight + 'px';
+	// '.slides' height
+	ele_wrapper.parentElement.style.height = ele_prevpage.offsetHeight + 'px';
 };
 
 // set '.slides' pages width as parent width
@@ -174,6 +187,18 @@ isdcng_blog.slide_initialize_parent = function (element) {
 	element.style.height = element.firstElementChild.offsetHeight;
 
 	element.style.width = '6666px';
-}
+};
 
 isdcng_blog.slide_show_default(document.getElementById('main-article-list'));
+
+isdcng_blog.para_toggle_combox = function (paragraph) {
+	var box_element = paragraph.parentElement.getElementsByClassName('article-paragraph-comment-container-wrapper')[0];
+
+	if (this.has_class(box_element, 'combox-shown')) {
+		this.remove_class(box_element, 'combox-shown');
+		this.slide_up_disappear(box_element);
+	} else {
+		this.add_class(box_element, 'combox-shown');
+		this.slide_down_appear(box_element);
+	}
+};

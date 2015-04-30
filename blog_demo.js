@@ -162,7 +162,16 @@ ISDCBlogDemoModule.service('articlesService', function () {
 		author_id: 0,
 		author_name: 'Windas',
 		comments: [
-			// { content: '打基础是大事。' }
+			{
+				author_id: 0,
+				author_name: 'Windas',
+				content: '打基础是大事。我们要尽量打好基础（说的跟基础想打就能打似的），不过就算不行的话我们也有压力嘛。'
+			},
+			{
+				author_id: 0,
+				author_name: 'Windas',
+				content: '打基础是大事。我们要尽量打好基础（说的跟基础想打就能打似的），不过就算不行的话我们也有压力嘛。'
+			}
 		]
 	};
 
@@ -185,4 +194,5 @@ ISDCBlogDemoModule.service('usersService', function () {
 	return {
 		get_userinfo: get_userinfo
 	};
+	
 });

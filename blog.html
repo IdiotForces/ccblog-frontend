@@ -113,17 +113,18 @@
 	<div class="wrap" style="max-width: 768px; margin: 2rem auto;">
 
 		<!-- article panel -->
-		<div class="container" hide-by-default ng-controller="MainArticleController" id="main-article" >
+		<div class="container" ng-controller="MainArticleController" id="main-article"
+			hide-by-default >
 			<!-- Semantic UI would remove margin Y of first and last piled segment -->
 			<!-- 0427: but wo dont need it anymore since it's unified with article list now -->
 			<!-- <div placeholder> </div> -->
 
-			<div id="main-article-content" class="ui piled segment">
+			<div id="main-article-content" class="ui segment">
 				<div class="ui text menu context-ops">
 					<a class="item" ng-click="back_to_article_list()">
 						<icon class="angle left"></icon> Back
 					</a>
-					<div class="ui text right menu context-ops">
+					<div class="ui right text menu context-ops">
 						<a class="item">
 							<icon class="thumbs up"></icon> Like
 						</a>
@@ -138,9 +139,18 @@
 				</div>
 				<div class="ui horizontal divider">x</div>
 				<div class="paragraphs">
-					<p ng-repeat="paragraph in current_article().content">
-						{{ paragraph.content }}
-					</p>
+					<div ng-repeat="paragraph in current_article().content" >
+						<p onclick="isdcng_blog.para_toggle_combox(this);" class="y-hidden-transition"> {{ paragraph.content }} </p>
+						<div hide-by-default class="article-paragraph-comment-container-wrapper">
+							<div class="article-paragraph-comment-container box-inset">
+								Comments
+								<div class="ui horizontal divider">POST A COMMENT</div>
+								<form class="ui form">
+									<textarea></textarea>
+								</form>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="ui horizontal divider">by <a href="">{{ current_article().author_name }}</a> 2014-12-08</div>
 				<div class="ui text menu context-ops">
@@ -169,7 +179,35 @@
 					<h3 class="center-aligned">No Comments yet.</h3>
 				</div>
 
+				<div class="ui divided items">
+					<div class="item" ng-repeat="comment in current_article().comments">
+						<img src="assets/placeholder.png" style="width: 48px; height: 48px; float: right" />
+						<div class="content">
+							<div class="header"><a href="">{{ comment.author_name }}</a></div>
+							<div class="description">{{ comment.content }}</div>
+							<div class="extra">2014-12-08</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="ui horizontal divider"> POST A COMMENT </div>
+
+				<form class="ui form segment">
+					<div class="field">
+						<textarea></textarea>
+					</div>
+					<div class="ui menu">
+						<div class="item">
+							Currently, We do not have foundation, but we have The Foundation.
+						</div>
+						<div class="right menu">
+							<a class="item">
+								POST
+								<icon class="arrow right"></icon>
+							</a>
+						</div>
+					</div>
+				</form>
 			</div>
 
 			<!-- <div placeholder> </div> -->
@@ -294,11 +332,11 @@
 							<div class="ui menu">
 								<!-- NOTE: if you place ng-click in <i />
 										you would MUST click ON THE ICON to invoke it! -->
-								<a class="icon item" ng-click="switch_numcol(1)">
+								<a class="icon item" ng-click="switch_numcol(1)" ng-class="{ 'active': !is_two_column() }">
 									<icon class="list"></icon>
 								</a>
-								<a class="icon item" ng-click="switch_numcol(2)">
-									<icon class="grid layout"></icon>
+								<a class="icon item" ng-click="switch_numcol(2)" ng-class="{ 'active': is_two_column() }">
+									<icon class="block layout"></icon>
 								</a>
 							</div>
 
@@ -430,7 +468,7 @@
 										<input type="text" placeholder="Check Code">
 									</field>
 									<div class="field">
-										<img src="./assets/ph_checkcode.png" />
+										<img src="./assets/ph_checkcode.png" onclick="isdcng_blog.slide_to_prev(this);" />
 									</div>
 								</div>
 							</field>
