@@ -8,8 +8,12 @@
 	<title>CCBlog - Demo page</title>
 
 	<link rel="stylesheet" type="text/css" href="./ng-semantic.css">
-	<link rel="stylesheet" type="text/css" class="ui" href="./external/semantic.css">
+	<link rel="stylesheet" type="text/css" class="ui" href="./external/semantic.min.css">
 	<link rel="stylesheet" type="text/css" class="ui" href="./isdcng-blog.css">
+		
+	<!-- TODO: hljs theme should be a setting to be customized -->
+	<!-- TODO: so does Markdown render theme -->
+	<link rel="stylesheet" type="text/css" href="./external/mono-blue.css">
 
 </head>
 
@@ -20,6 +24,9 @@
 		<menu-item>
 			CC
 		</menu-item>
+		
+		<!-- TODO: we disabled the whole header for now -->
+		<!--
 		<menu-item>
 			<a href="">Homepage</a>
 		</menu-item>
@@ -35,18 +42,29 @@
 		<menu-item>
 			<a href="">Worldwide</a>
 		</menu-item>
+		-->
 
 		<div class="right menu">
+			<!-- TODO: disabled socials because of WIP.
+					and they should be placed at footer. -->
+			<!--
 			<menu-item>
 				<icon icon-weibo></icon>
 				<icon icon-twitter></icon>
 			</menu-item>
-			<div class="ui simple dropdown pointing item">
-				User <icon icon-dropdown></icon>
+			-->
+			<a class="ui item" ng-show="!logged_in()" ng-click="login_modalshow()">
+				<icon class="sign in"></icon>
+				Log In
+			</a>
+			<div class="ui simple dropdown pointing item" ng-show="logged_in()">
+				<icon class="user" ng-show="logged_in()"></icon>
+				{{ logged_in() ? user_name() : 'User' }}
+				<icon icon-dropdown></icon>
 				<sui-menu>
-					<menu-item onclick="$('#login-modal').modal('show', function () { isdcng_blog.slide_initialize_parent(document.getElementsByClassName('slides')[0]); });">Log In</menu-item>
-					<menu-item><icon icon-weibo></icon>Settings</menu-item>
-					<menu-item><i class="quit icon">Log Out</i></menu-item>
+					<menu-item ng-show="!logged_in()" ng-click="login_modalshow()"><icon class="sign in"></icon>Log In</menu-item>
+					<menu-item><icon class="setting"></icon>Settings</menu-item>
+					<menu-item ng-show="logged_in()" ng-click="logout_onclick()"><icon class="sign out"></icon>Log Out</menu-item>
 				</sui-menu>
 			</div>
 		</div>
@@ -56,7 +74,9 @@
 	<div id="secondary-header" class="ui menu">
 
 		<menu-item>
-			<a href="" onclick="$('#secondary-header').transition({ animation: 'slide down', onComplete: function () { $('#secondary-header-hidden').transition('scale'); } });"><icon icon-up-chevron></icon></a>
+			<a href="" onclick="$('#secondary-header').transition({ animation: 'slide down', onComplete: function () { $('#secondary-header-hidden').transition('scale'); } });">
+				<icon class="angle up"></icon>
+			</a>
 		</menu-item>
 
 		<!-- breadcrumb navigation -->
@@ -65,11 +85,13 @@
 				<span ng-repeat="loc in breadcrumb_locations()">
 					<div active ng-show="$last" class="section" >{{ loc[0] }}</div>
 					<a ng-show="!$last" class="section" ng-click="loc[1]()">{{ loc[0] }}</a>
-					<i ng-show="!$last" class="right chevron icon divider inverted"></i>
+					<i ng-show="!$last" class="angle right icon divider inverted"></i>
 				</span>
 			</breadcrumb>
 		</div>
 
+		<!-- TODO: disabled search because its a WIP. -->
+		<!--
 		<div class="right menu">
 			<menu-item>
 				<div class="ui input icon">
@@ -78,13 +100,14 @@
 				</div>
 			</menu-item>
 		</div>
+		-->
 
 	</div>
 
 	<!-- secondary topbar is hidden -->
 	<span class="header hidden transition" id="secondary-header-hidden">
 		<a href="" id="btn-show-secondary" onclick="$('#secondary-header-hidden').transition({ animation: 'scale', onComplete: function () { $('#secondary-header').transition('slide down'); } });" style="padding: 0.3em 1em; display: inline-block; color: black;">
-			<icon icon-down-chevron class="text-small-shadow"></icon>
+			<icon class="angle down text-small-shadow"></icon>
 		</a>
 	</span>
 
@@ -112,6 +135,45 @@
 	<!-- or sliding with sidebar got very ugly because of `overflow-y: hidden` -->
 	<div class="wrap" style="max-width: 768px; margin: 2rem auto;">
 
+		<!-- new article panel -->
+		<div class="container" id="page-new-article" ng-controller="NewArticleController" hide-by-default>
+			<div class="ui horizontal divider">POST AN ARTICLE</div>
+			<div class="ui segment">
+				<div class="ui form">
+					<div class="fields">
+						<field class="nine wide">
+							<input type="text" placeholder="Title" />
+						</field>
+						<div class="field right-aligned">
+							by secondwtq
+						</div>
+					</div>
+					<div class="field">
+						<input type="text" placeholder="Secondary Title" />
+					</div>
+					<div class="ui horizontal divider">Content</div>
+					<div class="field">
+						<textarea id='page-new-article-content'></textarea>
+					</div>
+					<div class="ui menu">
+						<div class="item">
+							FOUNDATION
+						</div>
+						<div class="right menu">
+							<a class="item" href="" ng-click="showPreview()">
+								<icon class="circle thin"></icon>
+								PREVIEW
+							</a>
+							<a class="item" href="">
+								POST
+								<icon class="angle right"></icon>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> <!-- new article panel -->
+
 		<!-- article panel -->
 		<div class="container" ng-controller="MainArticleController" id="main-article"
 			hide-by-default >
@@ -135,11 +197,11 @@
 				</div>
 				<div class="ui large header">
 					<div class="content">{{ current_article().title }}</div>
-					<div class="sub header">论基础的重要性</div>
+					<div class="sub header">{{ current_article().title_secondary }}</div>
 				</div>
 				<div class="ui horizontal divider">x</div>
 				<div class="paragraphs">
-					<div ng-repeat="paragraph in current_article().content" >
+					<div ng-repeat="paragraph in current_article().paragraphs" >
 						<p onclick="isdcng_blog.para_toggle_combox(this);" class="y-hidden-transition"> {{ paragraph.content }} </p>
 						<div hide-by-default class="article-paragraph-comment-container-wrapper">
 							<div class="article-paragraph-comment-container box-inset">
@@ -194,16 +256,16 @@
 
 				<form class="ui form segment">
 					<div class="field">
-						<textarea></textarea>
+						<textarea id="comment-field"></textarea>
 					</div>
 					<div class="ui menu">
 						<div class="item">
 							Currently, We do not have foundation, but we have The Foundation.
 						</div>
 						<div class="right menu">
-							<a class="item">
+							<a class="item" href="" ng-click="post_comment()">
 								POST
-								<icon class="arrow right"></icon>
+								<icon class="angle right"></icon>
 							</a>
 						</div>
 					</div>
@@ -231,11 +293,21 @@
 					</div>
 
 				</menu-item>
+				
+				<div class="right menu">
+					<div class="ui item">
+						<div class="ui menu">
+							<a class="ui icon item" ng-click="switch_list_to_newessay()">
+								<icon class="plus"></icon>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div> <!-- top page navigation bar -->
 
 			<!-- article list segment -->
-			<div class="ui piled segment">
-				<h2>{{ myBlog.get_display_name() }}</h2>
+			<div class="ui horizontal divider">{{ myBlog.get_display_name() }}</div>
+			<div class="ui piled segment page-article-list-segment">
 
 				<div ng-class="{ 'ui two column grid': is_two_column() }"> <!-- articles -->
 					<div class="column"> <!-- left column, or the primary column if there is only one col -->
@@ -250,7 +322,7 @@
 										<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
 									</div>
 									<div class="content">
-										<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
+										<a class="header">{{ article.author_name }}</a>
 										<div class="meta">96-12-08</div>
 									</div>
 								</div>
@@ -372,32 +444,58 @@
 		</div>
 	</div> <!-- footer -->
 
-	<!-- login & register dialog -->
-	<modal-small id="login-modal">
-		<icon icon-close></icon>
-		<sui-header>Login</sui-header>
+<div class="ui modal" id="page-new-article-preview-modal">
+	<icon icon-close></icon>
+	<sui-header>
+		Preview
+	</sui-header>
+	
+	<sui-content id="page-new-article-preview-content">
+		<div id="page-new-article-preview-content-t" style="display: none;">
+			
+		</div>
+		<div id="page-new-article-preview-paragraphs">
 
-		<sui-content>
-			<div class="slides">
-				<div class="slide-wrapper">
+		</div>
+	</sui-content>
+	
+	<sui-actions>
+		<div class="ui black button">Cancel</div>
+	</sui-actions>
+</div>
 
-					<!-- login page -->
-					<div class="slide-page" style="padding: 1em;">
-						<form class="ui form">
-							<field>
-								<div class="ui icon input">
-									<input type="text" placeholder="Your Username">
-									<icon class="user"></icon>
-								</div>
-							</field>
+<!-- login & register dialog -->
+<div class="ui small modal" id="login-modal" ng-controller="LoginModalController">
+	<icon icon-close></icon>
+	<sui-header>
+		<!-- stackoverflow.com/questions/16584346/angularjs-if-then-else-construction-in-expression -->
+		{{ modal_status === 'login' ? 'Login' : 'Register' }}
+		
+		<div id="login-modal-message" class="modal-message right-floated">{{ login_message }}</div>
+	</sui-header>
 
-							<field>
-								<div class="ui icon input">
-									<input type="password" placeholder="Your Password">
-									<icon class="lock"></icon>
-								</div>
-							</field>
+	<sui-content>
+		<div class="slides">
+			<div class="slide-wrapper">
 
+				<!-- login page -->
+				<div class="slide-page" style="padding: 1em;">
+					<form id="login-modal-login-form" class="ui form">
+						<field>
+							<div class="ui icon input">
+								<input id="login-modal-login-name" name="username" type="text" placeholder="Your Username">
+								<icon class="user"></icon>
+							</div>
+						</field>
+
+						<field>
+							<div class="ui icon input">
+								<input id="login-modal-login-passwd" type="password" name="passwd" placeholder="Your Password">
+								<icon class="lock"></icon>
+							</div>
+						</field>
+						
+						<!--
 							<field>
 								<div class="fields">
 									<field class="five wide">
@@ -414,92 +512,113 @@
 									</div>
 								</div>
 							</field>
-
-							<field>
-								<div class="fields">
-									<field>
-										Or Login With:
-									</field>
-									<field>
-										<div class="ui circular google plus icon button">
-											<icon class="google plus"></icon>
-										</div>
-										<div class="ui circular github icon button">
-											<icon class="github alternate"></icon>
-										</div>
-										<div class="ui circular facebook icon button">
-											<icon class="facebook"></icon>
-										</div>
-									</field>
-								</div>
-							</field>
-						</form>
-						<a href="" onclick="isdcng_blog.slide_to_next(this);">Register</a>
-						<a style="float: right;" href="">Forget Password?</a>
-					</div> <!-- login page -->
-
-					<!-- register page -->
-					<div class="slide-page" style="padding: 1em;">
-						<form class="ui form">
-							<field>
-								<div class="ui icon input">
-									<input type="text" placeholder="Your Username">
-									<icon class="user"></icon>
-								</div>
-							</field>
-
-							<field>
-								<div class="ui icon input">
-									<input type="password" placeholder="Your Password">
-									<icon class="lock"></icon>
-								</div>
-							</field>
-
-							<field>
-								<div class="ui icon input">
-									<input type="email" placeholder="Your E-Mail">
-									<icon class="mail"></icon>
-								</div>
-							</field>
-
-							<field>
-								<div class="fields">
-									<field class="five wide">
-										<input type="text" placeholder="Check Code">
-									</field>
-									<div class="field">
-										<img src="./assets/ph_checkcode.png" onclick="isdcng_blog.slide_to_prev(this);" />
+						-->
+						<!--
+						<field>
+							<div class="fields">
+								<field>
+									Or Login With:
+								</field>
+								<field>
+									<div class="ui circular google plus icon button">
+										<icon class="google plus"></icon>
 									</div>
+									<div class="ui circular github icon button">
+										<icon class="github alternate"></icon>
+									</div>
+									<div class="ui circular facebook icon button">
+										<icon class="facebook"></icon>
+									</div>
+								</field>
+							</div>
+						</field>
+						-->
+						
+						<div class="ui error message">
+							
+						</div>
+						
+						<div id="field">
+							<a id="login-modal-reg-switch" href="" ng-click="switch_to_register_page();" >Register</a>
+							<a style="float: right;" href="">Forget Password?</a>
+						</div>
+					</form>
+				</div> <!-- login page -->
+
+				<!-- register page -->
+				<div class="slide-page" style="padding: 1em;">
+					<form class="ui form" id="login-modal-reg-form">
+						<field>
+							<div class="ui icon input">
+								<input type="text" id="login-modal-reg-username" name="username" placeholder="Your Username">
+								<icon class="user"></icon>
+							</div>
+						</field>
+
+						<field>
+							<div class="ui icon input">
+								<input type="password" id="login-modal-reg-passwd" name="passwd" placeholder="Your Password">
+								<icon class="lock"></icon>
+							</div>
+						</field>
+
+						<field>
+							<div class="ui icon input">
+								<input type="email"id="login-modal-reg-email" name="email" placeholder="Your E-Mail">
+								<icon class="mail"></icon>
+							</div>
+						</field>
+
+						<field>
+							<div class="fields">
+								<field class="five wide">
+									<input type="text" placeholder="Check Code">
+								</field>
+								<div class="field">
+									<img src="./assets/ph_checkcode.png" onclick="isdcng_blog.slide_to_prev(this);" />
 								</div>
-							</field>
+							</div>
+						</field>
+						
+						<div class="ui error message">
+							
+						</div>
 
-						</form>
-					</div> <!-- register page -->
+					</form>
+				</div> <!-- register page -->
 
-				</div>
 			</div>
-		</sui-content>
+		</div>
+	</sui-content>
 
-		<sui-actions>
-			<div class="ui black button">Cancel</div>
-			<div class="ui positive right button">Login</div>
-		</sui-actions>
-	</modal-small> <!-- login & register dialog -->
+	<sui-actions>
+		<div id="login-modal-cancel" class="ui black button">Cancel</div>
+		<div ng-click="modal_status === 'login' ? login_onclick() : register_onclick()" class="ui positive right button">{{ modal_status === 'login' ? 'Login' : 'Register' }}</div>
+	</sui-actions>
+</div> <!-- login & register dialog -->
 
 	<!-- JavaScripts -->
 	<!-- placed at last of page, to speed up loading -->
 
 	<!-- external scripts, foundation scripts, then page-specific scripts -->
 	<script src="./external/jquery-2.1.1.min.js"></script>
+	<script src="./external/cryptojs/sha3.js"></script>
+	<script src="./external/marked.js"></script>
+	<script src="./external/highlight.pack.js"></script>
 	<script type="text/javascript" src="./external/angular.min.js"></script>
-	<script src="./external/semantic.js"></script>
+	<script src="./external/semantic.min.js"></script>
 
 	<script type="text/javascript" src="blog_index.js"></script>
 	<script type="text/javascript" src="ng-semantic.js"></script>
 	<script type="text/javascript" src="ng-xoundation.js"></script>
 
 	<script type="text/javascript" src="blog_demo.js"></script>
+	<script type="text/javascript" src="blog_rds.js"></script>
 	<script type="text/javascript" src="blog_controllers.js"></script>
+
+	<script>
+		
+	</script>
 
 </body>
 

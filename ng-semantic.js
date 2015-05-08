@@ -72,8 +72,8 @@ ISDCNgSemantic.directive('modalSmall', function () {
 		transclude: true,
 		replace: true,
 
-		link: function(scope, element) {
-			$(element).modal({onShow: function () { $('.ui.checkbox').checkbox();}}); }
+//		link: function(scope, element) {
+//			$(element).modal({onShow: function () { $('.ui.checkbox').checkbox();}}); }
 	};
 });
 

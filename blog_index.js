@@ -1,3 +1,6 @@
+/* global CryptoJS */
+/// <reference path="typings/jquery/jquery.d.ts"/>
+
 $('.ui.accordion').accordion();
 
 var isdcng_blog = { };
@@ -113,8 +116,7 @@ isdcng_blog.slide_down_appear = function (element, callback) {
 
 // stackoverflow.com/questions/22119673/find-the-closest-ancestor-element-that-has-a-specific-class
 isdcng_blog.find_ans_with_cls = function (element, klass) {
-	while ((element = element.parentElement) && !element.classList.contains(klass))
-		;
+	while ((element = element.parentElement) && !element.classList.contains(klass));
 	return element;
 };
 
@@ -140,7 +142,10 @@ isdcng_blog.slide_to_next = function (element) {
 	this.iter_children(ele_wrapper, function (page) {
 		var org_left = parseInt(page.ownerDocument.defaultView.getComputedStyle(page, null).getPropertyValue('left').replace('px', ''));
 		page.style.left = (org_left - org_width) + 'px';
+		page.classList.remove('slide-active');
 	});
+	
+	ele_nextpage.classList.add('slide-active');
 
 	// '.slide-wrapper' height
 	ele_wrapper.style.height = ele_nextpage.offsetHeight + 'px';
@@ -153,7 +158,6 @@ isdcng_blog.slide_to_prev = function (element) {
 	var ele_thispage = this.find_ans_with_cls(element, 'slide-page');
 	var ele_wrapper = ele_thispage.parentElement;
 
-	var ele_current = ele_wrapper.firstElementChild;
 	var org_width = this.get_element_width(ele_thispage);
 
 	var ele_prevpage;
@@ -162,9 +166,13 @@ isdcng_blog.slide_to_prev = function (element) {
 		var org_left = parseInt(page.ownerDocument.defaultView.getComputedStyle(page, null).getPropertyValue('left').replace('px', ''));
 		page.style.left = (org_left + org_width) + 'px';
 
+		page.classList.remove('slide-active');
+
 		if (page.nextElementSibling == ele_thispage) {
 			ele_prevpage = page; }
 	});
+
+	ele_prevpage.classList.add('slide-active');
 
 	// '.slide-wrapper' height
 	ele_wrapper.style.height = ele_prevpage.offsetHeight + 'px';
@@ -176,6 +184,7 @@ isdcng_blog.slide_to_prev = function (element) {
 // deatils: set '.slide-wrapper' width with parent width
 // 			then set pages width, and set wrapper width back.
 isdcng_blog.slide_initialize_parent = function (element) {
+	var slide_root = element;
 	element = element.getElementsByClassName('slide-wrapper')[0];
 
 	element.style.width = '100%';
@@ -184,12 +193,26 @@ isdcng_blog.slide_initialize_parent = function (element) {
 	this.iter_children(element, function (child) {
 		child.style.width = element.offsetWidth + 'px';
 	});
-	element.style.height = element.firstElementChild.offsetHeight;
+	
+	// an annoying bug, with the 'px'
+	element.style.height = element.firstElementChild.offsetHeight + 'px';
+	slide_root.style.height = element.style.height;
 
+	element.firstElementChild.classList.add('slide-active');
 	element.style.width = '6666px';
 };
 
-isdcng_blog.slide_show_default(document.getElementById('main-article-list'));
+isdcng_blog.slide_update_height = function (slide) {
+	var slide_root = slide;
+	var slide_wrapper = slide_root.getElementsByClassName('slide-wrapper')[0];
+	var slide_current = slide_wrapper.getElementsByClassName('slide-active')[0];
+	
+//	slide_root.style.height = 'auto';
+//	slide_wrapper.style.height = 'auto';
+	
+	slide_wrapper.style.height = slide_current.offsetHeight + 'px';
+	slide_root.style.height = slide_wrapper.style.height;
+};
 
 isdcng_blog.para_toggle_combox = function (paragraph) {
 	var box_element = paragraph.parentElement.getElementsByClassName('article-paragraph-comment-container-wrapper')[0];
@@ -202,3 +225,6 @@ isdcng_blog.para_toggle_combox = function (paragraph) {
 		this.slide_down_appear(box_element);
 	}
 };
+
+isdcng_blog.encrypt = function (src) {
+	return CryptoJS.SHA3(src.toString()).toString(); };

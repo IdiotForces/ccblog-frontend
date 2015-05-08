@@ -1,4 +1,9 @@
-var ISDCBlogDApp = angular.module('isdcng.blogdemo', [ 'isdcng.blogdemo.devtest', 'isdcng.xoundation.trunk', 'isdcng.semantic.trunk' ]);
+/* global hljs */
+/* global marked */
+/* global isdcng_blog */
+/// <reference path="typings/angularjs/angular.d.ts"/>
+
+var ISDCBlogDApp = angular.module('isdcng.blogdemo', [ 'isdcng.blogdemo.rsample', 'isdcng.xoundation.trunk', 'isdcng.semantic.trunk' ]);
 
 ISDCBlogDApp.provider('myBlog', function () {
 	this.display_name = 'ISDCBlog';
@@ -63,7 +68,12 @@ ISDCBlogDApp.service('breadcrumbService', function () {
 	};
 });
 
-ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbService) {
+ISDCBlogDApp.service('newArticleService', function () {
+	
+});
+
+ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbService, usersService) {
+	
 	$scope.myBlog = myBlog;
 	$scope.breadcrumbService = breadcrumbService;
 
@@ -79,6 +89,71 @@ ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbSe
 			$scope.$apply();
 		});
 	};
+	
+	$scope.switch_newessay_to_list = function () {
+		isdcng_blog.slide_up_disappear(document.getElementById('page-new-article'), function () {
+			isdcng_blog.slide_down_appear(document.getElementById('main-article-list'));
+			
+			$scope.breadcrumbService.set_locations($scope.breadcrumbService.get_nav_article_list());
+			$scope.$apply();
+		});
+	};
+	
+	$scope.switch_list_to_newessay = function () {
+		isdcng_blog.slide_up_disappear(document.getElementById('main-article-list'), function () {
+			isdcng_blog.slide_down_appear(document.getElementById('page-new-article'));
+			
+			breadcrumbService.set_locations([
+				['Home', ''],
+				['Blog', function () { $scope.switch_newessay_to_list(); }],
+				['Create Article', '']
+			]);
+			
+			$scope.$apply();
+		});
+	};
+
+//	==============================================================================
+//	** AUTHENTICATION CONTROLS **
+
+	$scope.logged_in = function () {
+		return usersService.has_loggedin(); };
+
+	$scope.user_name = function () {
+		return usersService.current_user().username; };
+
+	// stackoverflow.com/questions/12304291/angularjs-how-to-run-additional-code-after-angularjs-has-rendered-a-template
+	$scope.$evalAsync(function () {
+		
+		usersService.validate_login();
+		
+		isdcng_blog.slide_show_default(document.getElementById('main-article-list'));
+		
+	});
+	
+	$scope.login_modalshow = function () {
+		usersService.validate_login().then(function (succeed) {
+			if (!succeed) {
+				$('#login-modal').modal('show', function () {
+					isdcng_blog.slide_initialize_parent(document.getElementsByClassName('slides')[0]);
+				});
+			}
+		});
+	};
+	
+	$scope.logout_onclick = function () {
+		usersService.log_out().then(function (message) {
+			if (message == 'succeed') {
+				
+			} else {
+
+			}
+		});
+	};
+	
+//	** AUTHENTICATION CONTROLS **
+//	==============================================================================
+
 });
 
 ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScope, myBlog, pages, articlesService, usersService, utilService, mainArticleListPages) {
@@ -126,23 +201,238 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 
 	$scope.jump_to_article = function (article) {
 		$scope.current_article_id = article.article_id;
+		articlesService.article_detail(article.article_id);
+
 		isdcng_blog.slide_up_disappear(document.getElementById('main-article-list'), function () {
 			isdcng_blog.slide_down_appear(document.getElementById('main-article'));
 
-			$scope.breadcrumbService.set_locations([ ['Home', ''], ['Blog', ''],
+			$scope.breadcrumbService.set_locations([ ['Home', ''], ['Blog', function () { $scope.back_to_article_list(); }],
 					['Article List', function () { $scope.back_to_article_list(); }], ['Article - ', ''] ]);
-					
+
 			$scope.$apply();
 		});
 	};
 
 });
 
-ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesService) {
+ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesService, $http) {
 
 	$scope.articlesService = articlesService;
 
 	$scope.current_article = function () {
-		return articlesService.article_detail($scope.current_article_id); };
+		return articlesService.cache_article_details[$scope.current_article_id]; };
 
+	// TODO: Post Article
+	$scope.post_comment = function () {
+		var data = {
+			content: document.getElementById('comment-field').value };
+
+		$http.post('/articles/' + $scope.current_article_id + "/comment", data)
+			.success(function (data, status, headers, config) {
+				articlesService.article_detail($scope.current_article().article_id);
+
+				document.getElementById('comment-field').value = '';
+			})
+			.error(function (data, status, headers, config) {
+				if (status == 404) {
+
+				} else if (status == 500) {
+
+				} else if (status == 401) {
+					
+				}
+			});
+	};
+});
+
+ISDCBlogDApp.controller('NewArticleController', function ($scope) {
+	
+	$scope.showPreview = function () {
+		
+		// TODO: this is a setting option to be customized
+		marked.setOptions({
+			gfm: true, tables: true, breaks: true,
+			smartLists: true, smartypants: true,
+			highlight: function (code) {
+				return hljs.highlightAuto(code).value; }
+		});
+		
+		document.getElementById('page-new-article-preview-content-t').innerHTML =
+			marked(document.getElementById('page-new-article-content').value);
+		
+		$('#page-new-article-preview-paragraphs').empty();
+		var last_child = $('<div></div>').addClass('page-new-article-preview-paragraph');
+		$('#page-new-article-preview-paragraphs').append(last_child);
+		
+		var len = $('#page-new-article-preview-content-t > *').length;
+		$('#page-new-article-preview-content-t > *').each(function (index, element) {
+			last_child.append(element);
+			
+			var tag = element.nodeName;
+			// TODO: this is a setting option to be customized, an 'in' syntax
+			if (index < (len - 1) && (tag == 'P' || tag == 'UL' || tag == 'PRE')) {
+				var new_element = $('<div></div>').addClass('page-new-article-preview-paragraph');
+				$('#page-new-article-preview-paragraphs').append(new_element);
+				last_child = new_element;
+			}
+		});
+		
+		// show preview modal and refersh its layout
+		$('#page-new-article-preview-modal').modal('show', function () {
+			$('#page-new-article-preview-modal').modal('refresh'); });
+	};
+	
+	$scope.$evalAsync(function () {
+		$('#page-new-article-preview-modal').modal();
+	});
+	
+});
+
+ISDCBlogDApp.controller('LoginModalController', function ($scope, usersService) {
+	
+	$scope.modal_status = 'login';
+
+	$scope.login_onclick = function () {
+		if ($('#login-modal-login-form').form('validate form')) {
+			var username = document.getElementById('login-modal-login-name').value;
+			usersService.try_login(username, document.getElementById('login-modal-login-passwd').value)
+				.then(function (message) {
+					console.log(message);
+					if (message == 'succeed') {
+						$scope.set_login_message('Login succeed.', 'message');
+						setTimeout(function () {
+							document.getElementById('login-modal-login-name').value =
+								document.getElementById('login-modal-login-passwd').value = 
+									'';
+							$('#login-modal').modal('hide');
+							$scope.clear_login_message();
+						}, 1000);
+					} else {
+						var msg = 'Login failed';
+						if (message === 'user-not-found') {
+							msg = 'No user called \'' + username + '\'.';
+							document.getElementById('login-modal-login-name').focus();
+						} else if (message === 'server-error') {
+							msg = 'Login failed due to unknown server fault.';
+						} else if (message === 'auth-failed') {
+							msg = 'Invalid password.';
+							document.getElementById('login-modal-login-passwd').focus();
+						}
+						$scope.set_login_message(msg, 'error');
+					}
+				});
+		} else {
+			isdcng_blog.slide_update_height(document.getElementsByClassName('slides')[0]);
+			$scope.set_login_message('Invalid information.', 'error');
+		}
+	};
+	
+	$scope.register_onclick = function () {
+		if ($('#login-modal-reg-form').form('validate form')) {
+			usersService.try_register(document.getElementById('login-modal-reg-username').value, 
+				document.getElementById('login-modal-reg-passwd').value, document.getElementById('login-modal-reg-email').value)
+				.then(function (message) {
+					console.log(message);
+					if (message == 'succeed') {
+						$scope.set_login_message('Register succeed.', 'message');
+						setTimeout(function () {
+							isdcng_blog.slide_to_prev(document.getElementById('login-modal-reg-username'));
+							$scope.modal_status = 'login'; $scope.$apply();
+						}, 1000);
+					} else {
+						var msg = 'Register failed.';
+						if (message === 'server-error') {
+							msg = 'Register failed due to unknown server fault.';
+						} else if (message === 'invalid-request') {
+							msg = 'Invalid information.';
+						}
+						$scope.set_login_message(msg, 'error');
+					}
+				});
+		} else {
+			isdcng_blog.slide_update_height(document.getElementsByClassName('slides')[0]);
+			$scope.set_login_message('Invalid information.', 'error');
+		}
+	};
+	
+	$scope.switch_to_register_page = function () {
+		isdcng_blog.slide_to_next(document.getElementById('login-modal-reg-switch'));
+		$scope.modal_status = 'register';
+	};
+	
+	$scope.login_message = '';
+	
+	$scope.set_login_message = function (message, msg_type) {
+		var msg_ele = document.getElementById('login-modal-message');
+		var new_color = '#000000';
+		
+		if (msg_type == 'message') {
+			new_color = '#00EE00';
+		} else if (msg_type == 'error') {
+			new_color = '#EE0000';
+		}
+		
+		$scope.login_message = message.toString();
+		msg_ele.style.color = new_color;
+		
+		setTimeout(function () {
+			msg_ele.style.color = '#000000';
+		}, 500);
+	};
+	
+	$scope.clear_login_message = function () {
+		$scope.login_message = ''; };
+		
+	$scope.$evalAsync(function () {
+		
+		$('#login-modal').modal({
+			onShow: function () { $('.ui.checkbox').checkbox(); },
+			selector: {
+				// github.com/Semantic-Org/Semantic-UI/issues/432
+				close: '.close.icon, #login-modal-cancel'
+			}
+		});
+		
+		$('#login-modal-login-form').form({
+			username: {
+				identifier: 'username',
+				rules: [ {
+						type : 'length[3]',
+						prompt : 'Username must be at least 3 chars.'
+					} ]
+			},
+			password : {
+				identifier: 'passwd',
+				rules: [ {
+						type : 'length[6]',
+						prompt : 'Password must bt at least 6 chars.'
+					} ]
+			}
+		});
+		
+		$('#login-modal-reg-form').form({
+			username: {
+				identifier: 'username',
+				rules: [ {
+					type : 'length[3]',
+					prompt : 'Username must be at least 3 chars.'
+				} ]
+			},
+			password : {
+				identifier: 'passwd',
+				rules: [ {
+					type : 'length[6]',
+					prompt : 'Password must be at least 6 chars.'
+				} ]
+			},
+			email : {
+				identifier: 'email',
+				rules: [ {
+					type : 'email',
+					prompt : 'Invalid email.'
+				} ]
+			}
+		});
+	});
+		
 });
