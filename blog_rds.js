@@ -3,7 +3,7 @@
 
 ISDCBlogRSampleModule = angular.module('isdcng.blogdemo.rsample', [ ]);
 
-ISDCBlogRSampleModule.service('articlesService', function ($http, $q) {
+ISDCBlogRSampleModule.service('articlesService', function ($http, $q, $rootScope) {
 
 	var count_articles = 0;
 	var data_list = [ ];
@@ -24,7 +24,7 @@ ISDCBlogRSampleModule.service('articlesService', function ($http, $q) {
 			t.summary = article.summary;
 			t.title_secondary = article.title_secondary;
 			t.author_name = article.author_name;
-			t.category = ['毛概'];
+			t.category = article.tags;
 
 			ret.push(t);
 		}

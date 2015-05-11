@@ -20,7 +20,7 @@
 <body ng-controller="BlogController">
 
 	<!-- top navbar -->
-	<div id="header" class="ui menu">
+	<div id="header" class="ui menu" style="display: none;">
 		<menu-item>
 			CC
 		</menu-item>
@@ -111,24 +111,56 @@
 		</a>
 	</span>
 
-<div class="wrap iclearfix" style="max-width: 1280px; margin: 0 auto;">
-
+<div class="wrap iclearfix" style="max-width: 1240px; margin: 0 auto;">
+	
 	<!-- left sidebar -->
-	<div class="left-floated" style="z-index: 100;">
-		<div class="ui vertical accordion menu">
-			<div class="item">
-				<a class="title">
-					<i class="dropdown icon"></i>
-					新儒学
-				</a>
-				<div class="content menu">
-					<menu-item is-link href="">新儒学</menu-item>
-					<menu-item is-link href="">新儒学</menu-item>
-					<menu-item is-link href="">新儒学</menu-item>
-					<menu-item is-link href="">新儒学</menu-item>
+	<div id="left-sidebar" class="left-floated" style="z-index: 100; margin-bottom: 1em; margin-top: 1.5em;">
+		
+		<div class="resp-column">
+			<div class="ui center aligned header">
+<!--				<icon class="circular user"></icon>-->
+				<div><img id="sidebar-avatar" src="./assets/placeholder.png" /></div>
+				<div class="ui active button" ng-show="!logged_in()" ng-click="login_modalshow()">Login</div>
+				<div class="ui horizontal divider" ng-show="logged_in()">{{ user_name() }}</div>
+				<div class="sidebar-second-usert" ng-show="logged_in()">FOUNDATION</div>
+				<div class="sidebar-ops" ng-show="logged_in()">
+					<a href="" ng-click="logout_onclick()"><icon class="sign out"></icon></a>
+				</div>
+			</div>
+			
+		</div>
+		
+		<div class="resp-column">
+			<div class="ui vertical accordion menu">
+				<div class="item">
+					<a class="title">
+						<i class="dropdown icon"></i>
+						新儒学
+					</a>
+					<div class="content menu">
+						<menu-item is-link href="">新儒学</menu-item>
+						<menu-item is-link href="">新儒学</menu-item>
+						<menu-item is-link href="">新儒学</menu-item>
+						<menu-item is-link href="">新儒学</menu-item>
+					</div>
+				</div>
+			</div>
+			<div class="ui vertical accordion menu">
+				<div class="item">
+					<a class="title">
+						<i class="dropdown icon"></i>
+						新儒学
+					</a>
+					<div class="content menu">
+						<menu-item is-link href="">新儒学</menu-item>
+						<menu-item is-link href="">新儒学</menu-item>
+						<menu-item is-link href="">新儒学</menu-item>
+						<menu-item is-link href="">新儒学</menu-item>
+					</div>
 				</div>
 			</div>
 		</div>
+
 	</div> <!-- left sidebar -->
 
 	<!-- stackoverflow.com/questions/6421966/css-overflow-x-visible-and-overflow-y-hidden-causing-scrollbar-issue -->
@@ -139,20 +171,20 @@
 		<div class="container" id="page-new-article" ng-controller="NewArticleController" hide-by-default>
 			<div class="ui horizontal divider">POST AN ARTICLE</div>
 			<div class="ui segment">
-				<div class="ui form">
-					<div class="fields">
+				<div class="ui form" id="new-article-form">
+					<div class="fields no-clear">
 						<field class="nine wide">
-							<input type="text" placeholder="Title" />
+							<input type="text" name="title" id="text-title" placeholder="Title" />
 						</field>
 						<div class="field right-aligned">
 							by secondwtq
 						</div>
 					</div>
-					<div class="field">
-						<input type="text" placeholder="Secondary Title" />
+					<div class="field no-clear">
+						<input type="text" name="secondary-title" id="text-second-title" placeholder="Secondary Title" />
 					</div>
-					<div class="ui horizontal divider">Content</div>
-					<div class="field">
+					<div class="ui horizontal divider no-clear aft-no-clear">Content</div>
+					<div class="field no-clear">
 						<textarea id='page-new-article-content'></textarea>
 					</div>
 					<div class="ui menu">
@@ -164,7 +196,7 @@
 								<icon class="circle thin"></icon>
 								PREVIEW
 							</a>
-							<a class="item" href="">
+							<a class="item" href="" ng-click="post_article_onclick()">
 								POST
 								<icon class="angle right"></icon>
 							</a>
@@ -201,8 +233,9 @@
 				</div>
 				<div class="ui horizontal divider">x</div>
 				<div class="paragraphs">
-					<div ng-repeat="paragraph in current_article().paragraphs" >
-						<p onclick="isdcng_blog.para_toggle_combox(this);" class="y-hidden-transition"> {{ paragraph.content }} </p>
+					<div ng-repeat="paragraph in current_article().paragraphs" class="article-paragraph-wrapper">
+						<!-- stackoverflow.com/questions/9381926/insert-html-into-view-using-angularjs -->
+						<div onclick="isdcng_blog.para_toggle_combox(this);" class="y-hidden-transition article-paragraph" ng-bind-html="paragraph.content"></div>
 						<div hide-by-default class="article-paragraph-comment-container-wrapper">
 							<div class="article-paragraph-comment-container box-inset">
 								Comments
@@ -277,6 +310,8 @@
 
 		<!-- article list panel -->
 		<div class="container" ng-controller="MainArticleListController" id="main-article-list">
+			<div class="ui horizontal divider">{{ myBlog.get_display_name() }}</div>
+			
 			<!-- top page navigation bar -->
 			<div class="ui menu pagenav-bar small-shadow">
 
@@ -306,7 +341,6 @@
 			</div> <!-- top page navigation bar -->
 
 			<!-- article list segment -->
-			<div class="ui horizontal divider">{{ myBlog.get_display_name() }}</div>
 			<div class="ui piled segment page-article-list-segment">
 
 				<div ng-class="{ 'ui two column grid': is_two_column() }"> <!-- articles -->
@@ -314,18 +348,7 @@
 
 						<div class="ui divided items transition">
 
-							<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_odd">
-
-								<!-- user avatar etc. -->
-								<div class="ui card image mxuser">
-									<div class="image">
-										<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
-									</div>
-									<div class="content">
-										<a class="header">{{ article.author_name }}</a>
-										<div class="meta">96-12-08</div>
-									</div>
-								</div>
+							<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_odd_e:is_two_column()" style="table-layout: auto;">
 
 								<div class="content">
 									<a class="header" ng-click="jump_to_article(article)">{{ article.title }}</a>
@@ -333,11 +356,16 @@
 										<span>{{ article.title_secondary }}</span>
 									</div>
 									<div class="description">
-										{{ article.summary }}
+<!--										{{ article.summary }}-->
 									</div>
 									<div class="extra">
+										by {{ article.author_name }} @ 96-12-08 <br />
 										<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
 									</div>
+								</div>
+								
+								<div class="ui tiny image article-list-img" style="display: table-cell;">
+									<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
 								</div>
 							</div>
 						</div>
@@ -348,30 +376,24 @@
 
 						<div class="ui divided items transition">
 
-							<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_even">
-
-								<!-- user avatar etc. -->
-								<div class="ui card image mxuser">
-									<div class="image">
-										<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
-									</div>
-									<div class="content">
-										<a class="header">{{ usersService.get_userinfo(article.author_id).username }}</a>
-										<div class="meta">96-12-08</div>
-									</div>
-								</div>
+							<div class="item" ng-repeat="article in article_list_page(get_current_page()) | idx_even" style="table-layout: auto;">
 
 								<div class="content">
-									<a class="header">{{ article.title }}</a>
+									<a class="header" ng-click="jump_to_article(article)">{{ article.title }}</a>
 									<div class="meta">
 										<span>{{ article.title_secondary }}</span>
 									</div>
 									<div class="description">
-										{{ article.summary }}
+<!--										{{ article.summary }}-->
 									</div>
 									<div class="extra">
+										by {{ article.author_name }} @ 96-12-08 <br />
 										<a ng-repeat="tag in article.category" class="ui label">{{ tag }}</a>
 									</div>
+								</div>
+								
+								<div class="ui tiny image article-list-img">
+									<img ng-src="{{ usersService.get_userinfo(article.author_id).user_avatar }}" />
 								</div>
 							</div>
 						</div>
@@ -422,7 +444,7 @@
 </div>
 
 	<!-- footer -->
-	<div class="ui tertiary inverted footer vertical segment">
+	<div id="footer" class="ui tertiary inverted footer vertical segment">
 		<div class="ui stackablecenter aligned page grid">
 
 			<div class="row">
@@ -444,7 +466,7 @@
 		</div>
 	</div> <!-- footer -->
 
-<div class="ui modal" id="page-new-article-preview-modal">
+<div class="ui modal" id="page-new-article-preview-modal" ng-controller="PreviewModalController">
 	<icon icon-close></icon>
 	<sui-header>
 		Preview
@@ -606,6 +628,7 @@
 	<script src="./external/marked.js"></script>
 	<script src="./external/highlight.pack.js"></script>
 	<script type="text/javascript" src="./external/angular.min.js"></script>
+	<script type="text/javascript" src="./external/angular-sanitize.min.js"></script>
 	<script src="./external/semantic.min.js"></script>
 
 	<script type="text/javascript" src="blog_index.js"></script>

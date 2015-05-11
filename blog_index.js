@@ -63,7 +63,7 @@ isdcng_blog.get_element_width = function (element) {
 };
 
 isdcng_blog.settings = {
-	max_height: 2560,
+	max_height: 23333,
 
 	max_height_with_px: function () {
 		return this.max_height + 'px'; }
@@ -199,7 +199,7 @@ isdcng_blog.slide_initialize_parent = function (element) {
 	slide_root.style.height = element.style.height;
 
 	element.firstElementChild.classList.add('slide-active');
-	element.style.width = '6666px';
+	element.style.width = '23333px';
 };
 
 isdcng_blog.slide_update_height = function (slide) {

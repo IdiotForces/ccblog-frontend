@@ -3,7 +3,7 @@
 /* global isdcng_blog */
 /// <reference path="typings/angularjs/angular.d.ts"/>
 
-var ISDCBlogDApp = angular.module('isdcng.blogdemo', [ 'isdcng.blogdemo.rsample', 'isdcng.xoundation.trunk', 'isdcng.semantic.trunk' ]);
+var ISDCBlogDApp = angular.module('isdcng.blogdemo', [ 'ngSanitize', 'isdcng.blogdemo.rsample', 'isdcng.xoundation.trunk', 'isdcng.semantic.trunk' ]);
 
 ISDCBlogDApp.provider('myBlog', function () {
 	this.display_name = 'ISDCBlog';
@@ -78,6 +78,8 @@ ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbSe
 	$scope.breadcrumbService = breadcrumbService;
 
 	$scope.current_article_id = 0;
+	
+	$scope.set_current_art_id = function (id) { $scope.current_article_id = id; };
 
 	$scope.breadcrumb_locations = function () { return breadcrumbService.get_locations(); };
 
@@ -120,7 +122,8 @@ ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbSe
 		return usersService.has_loggedin(); };
 
 	$scope.user_name = function () {
-		return usersService.current_user().username; };
+		if (usersService.current_user())
+			return usersService.current_user().username; };
 
 	// stackoverflow.com/questions/12304291/angularjs-how-to-run-additional-code-after-angularjs-has-rendered-a-template
 	$scope.$evalAsync(function () {
@@ -200,8 +203,8 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 		return articlesService.article_list((pn-1)*pages.get_item_per_page(), pn*pages.get_item_per_page()); };
 
 	$scope.jump_to_article = function (article) {
-		$scope.current_article_id = article.article_id;
 		articlesService.article_detail(article.article_id);
+		$scope.set_current_art_id(article.article_id);
 
 		isdcng_blog.slide_up_disappear(document.getElementById('main-article-list'), function () {
 			isdcng_blog.slide_down_appear(document.getElementById('main-article'));
@@ -215,7 +218,7 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 
 });
 
-ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesService, $http) {
+ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesService, $http, $sanitize) {
 
 	$scope.articlesService = articlesService;
 
@@ -245,20 +248,19 @@ ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesServi
 	};
 });
 
-ISDCBlogDApp.controller('NewArticleController', function ($scope) {
+ISDCBlogDApp.controller('NewArticleController', function ($scope, $http) {
 	
-	$scope.showPreview = function () {
-		
+	$scope.generate_n_split = function (text) {
 		// TODO: this is a setting option to be customized
 		marked.setOptions({
-			gfm: true, tables: true, breaks: true,
+			gfm: true, tables: true, breaks: false,
 			smartLists: true, smartypants: true,
 			highlight: function (code) {
 				return hljs.highlightAuto(code).value; }
 		});
 		
 		document.getElementById('page-new-article-preview-content-t').innerHTML =
-			marked(document.getElementById('page-new-article-content').value);
+			marked(text);
 		
 		$('#page-new-article-preview-paragraphs').empty();
 		var last_child = $('<div></div>').addClass('page-new-article-preview-paragraph');
@@ -276,15 +278,72 @@ ISDCBlogDApp.controller('NewArticleController', function ($scope) {
 				last_child = new_element;
 			}
 		});
+	}
+	
+	$scope.showPreview = function () {
+		
+		$scope.generate_n_split(document.getElementById('page-new-article-content').value);
 		
 		// show preview modal and refersh its layout
 		$('#page-new-article-preview-modal').modal('show', function () {
 			$('#page-new-article-preview-modal').modal('refresh'); });
 	};
 	
+	$scope.post_article_onclick = function () {
+		
+		if ($('#new-article-form').form('validate form')) {
+			
+			$scope.generate_n_split(document.getElementById('page-new-article-content').value);
+			
+			var data = {
+				title : document.getElementById('text-title').value,
+				title_secondary : document.getElementById('text-second-title').value,
+				paragraphs : [ ]
+			};
+			$('#page-new-article-preview-paragraphs > .page-new-article-preview-paragraph').each(function (index, element) {
+				data.paragraphs.push(element.innerHTML); });
+			
+			console.log(data);
+			
+			$http.post("/articles", data).success(function (data, status, header, config) {
+				
+			}).error(function (data, status, header, config) {
+				if (status == 401) {
+					
+				} else if (status == 500) {
+					
+				} else {
+					
+				}
+			});
+		}
+	};
+	
 	$scope.$evalAsync(function () {
 		$('#page-new-article-preview-modal').modal();
+		
+		$('#new-article-form').form({
+			username: {
+				identifier: 'title',
+				rules: [ {
+						type : 'length[8]',
+						prompt : 'Title must be at least 8 chars.'
+					} ]
+			},
+			password : {
+				identifier: 'secondary-title',
+				rules: [ {
+						type : 'length[6]',
+						prompt : 'Secondary title must bt at least 6 chars.'
+					} ]
+			}
+		});
+		
 	});
+	
+});
+
+ISDCBlogDApp.controller('PreviewModalController', function ($scope) {
 	
 });
 

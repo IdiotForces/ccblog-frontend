@@ -1,11 +1,13 @@
 
 body {
-	background: -webkit-image-set(url(assets/background.png) 2.5x)
-			0% 0% repeat-x rgb(238, 238, 238);
+	background-color: rgb(227, 227, 227);
+/*	background: -webkit-image-set(url(assets/background.png) 2.5x)*/
+/*			0% 0% repeat-x rgb(238, 238, 238);*/
+/*	background: url(assets/background.png) 1000%;*/
 }
 
 #page-new-article-preview-paragraphs > .page-new-article-preview-paragraph,
-.paragraphs p {
+.paragraphs > .article-paragraph-wrapper > .article-paragraph > p {
 	text-indent: 1em;
 	margin: 0 0 1em;
 	background-color: rgba(255, 255, 255, 0);
@@ -13,36 +15,49 @@ body {
 /*	padding: 0;*/
 }
 
-#page-new-article-preview-paragraphs > .page-new-article-preview-paragraph > pre {
+#page-new-article-preview-paragraphs > .page-new-article-preview-paragraph > pre,
+.paragraphs > .article-paragraph-wrapper > .article-paragraph > pre {
 	overflow: visible;
 	text-indent: 0;
 	padding: 1em !important;
 	border-radius: 3px;
 	box-shadow: inset 1px 1px 3px gray;
+	
+	/* css-tricks.com/snippets/css/make-pre-text-wrap */
+	white-space: pre-wrap;
 }
 
-#page-new-article-preview-paragraphs > .page-new-article-preview-paragraph > ul {
+#page-new-article-preview-paragraphs > .page-new-article-preview-paragraph > ul,
+.paragraphs > .article-paragraph-wrapper > .article-paragraph > ul {
 	text-indent: 0;
 }
 
 #page-new-article-preview-paragraphs > .page-new-article-preview-paragraph:hover,
-.paragraphs p:hover {
+.paragraphs > .article-paragraph-wrapper > .article-paragraph:hover {
 	color: grey;
 	cursor: pointer;
 	background-color: rgba(0, 0, 0, 0.05); 
 	border-radius: 0.5em;
 }
 
+#page-new-article-content {
+	min-height: 8em;
+	height: 54em;
+	max-height: 96em;
+	resize: vertical;
+}
+
 #secondary-header {
-	background: url(assets/background-light.png) 1%;
+/*	background: url(assets/background-light.png) 1%;*/
+	background-color: rgb(227, 227, 227);
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
-	box-shadow: inset rgba(0, 0, 0, 0.1) 0 -2px 4px, 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+/*	box-shadow: inset rgba(0, 0, 0, 0.1) 0 -2px 4px, 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05) !important;*/
 	margin: 0;
 }
 
 .pagenav-bar {
-	background: url(assets/background-light.png) 1% !important;
+/*	background: url(assets/background-light.png) 1% !important;*/
 
 	/* http://stackoverflow.com/questions/11024867/clear-child-floats-without-clearing-external-floats */
 	/* or SUI will "fix" the float of sidebar */
@@ -54,7 +69,7 @@ body {
 }*/
 
 #main-article-content {
-	margin-bottom: 2em;
+	margin-bottom: 2.5em;
 }
 
 #header {
@@ -66,9 +81,65 @@ body {
 	position: relative;
 }
 
-.footer {
+#footer.footer {
     box-shadow: inset rgba(0, 0, 0, 0.2) 0 6px 4px !important;
     background: linear-gradient(rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.5) 100%) !important;
+	background-color: #666666 !important;
+}
+
+@media only screen and (max-width: 1160px) {
+	#left-sidebar {
+		float: none;
+		margin: 0 auto;
+		padding: 0;
+		display: table;
+		/* stackoverflow.com/questions/339923/set-cellpadding-and-cellspacing-in-css */
+		border-spacing: 2em 0;
+	}
+	
+	#left-sidebar .vertical.accordion.menu {
+		margin: 0 auto;
+		text-align: center;
+	}
+	
+	#left-sidebar > .resp-column {
+		display: table-cell;
+		vertical-align: middle;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.ui.items>.item>.image.article-list-img,
+	.ui.items>.item>.image.article-list-img > img {
+		width: 80px !important;	
+	}
+}
+
+#sidebar-avatar {
+	display: block;
+	box-shadow: 2px 2px 6px #888888;
+	border-radius: 50%;
+	background-color: white;
+	margin: 0 auto;
+	margin-bottom: 1em;
+	width: 96px;
+}
+
+.sidebar-second-usert {
+	font-size: 0.7em;
+	line-height: 1em;
+	margin-bottom: 0.5em;
+	font-weight: normal;
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.sidebar-ops {
+	font-size: 0.8em;
+	margin-bottom: 1em;
+}
+
+.sidebar-ops > a {
+	color: rgba(0, 0, 0, 0.3);
 }
 
 /* *Article Panel - Comment Container Style* */
@@ -77,6 +148,7 @@ body {
 	/*background-size:  ;*/
 	border-radius: 6px !important;
 	padding: 1em;
+	margin-bottom: 1em;
 
 	position: relative;
 }
@@ -114,8 +186,8 @@ body {
 	transition: color 0.2s ease-in-out;
 }
 
-.page-article-list-segment {
-	margin-top: 0 !important;
+.page-article-list-segment > .ui.two.column.grid:after {
+	clear: none;
 }
 
 .mxuser.card {
@@ -229,4 +301,12 @@ body {
 
 .y-hidden {
 	max-height: 0px !important;
+}
+
+.no-clear {
+	clear: none !important;
+}
+
+.no-clear:after {
+	clear: none !important;
 }
