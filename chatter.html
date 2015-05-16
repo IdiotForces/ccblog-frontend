@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="isdcng.chatter">
+	
+<head>
+	<meta charset="utf-8">
+	<title>Chatter</title>
+	
+	<link rel="stylesheet" type="text/css" href="./external/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="isdcng-blog.css">
+	
+</head>
+
+<body class="ch-body ch-theme-card" ng-controller="ISDCNgChatterRootController">
+	
+<div class="container">
+	
+	<div class="ch-inner-container">
+		<div class="btn-group" role="group" id="nodes-list">
+			<button type="button" class="btn btn-default" ng-repeat="node in nodes" ng-click="switch_to_node(node.id)">{{ node.name }}</button>
+		</div>
+<!--		<div class="input-group">
+			<input type="text" class="form-control" placeholder="Go to Node ..." >
+			<span class="input-group-btn">
+				<button class="btn btn-default">Go</button>
+			</span>
+		</div>-->
+		<div id="ch-topics">
+			<chatter-panel databuf="data" rootid="current_nodeid" nodeid="current_nodeid"
+				eventhandler="fetch_message_detail"></chatter-panel>
+		</div>
+		<ul class="pager">
+			<li class="previous"><a href="#"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span></a></li>
+			<li class="next"><a href="#"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a></li>
+		</ul>
+		
+		<div class="ch-accordion-wrapper" id="chpanel-newtopic-accordion">
+			<div class="ch-accordion-header-wrapper">
+				<div class="ch-accordion-header">Your Turn!
+					<span class="glyphicon glyphicon-plus right-floated" aria-hidden="true"></span>
+				</div>
+			</div>
+			<div class="ch-accordion-content-wrapper">
+				<div class="ch-accordion-content">
+					<div class="form-group ch-col-input-group" id="chpanel-newtopic">
+						<input type="text" class="form-control ch-input" id="ch-postopic-title" placeholder="Title" />
+						<textarea class="form-control ch-input" rows="8" id="ch-postopic-content" placeholder="Content"></textarea>
+						<div class="btn-group ch-input ch-altered right-aligned" role="group">
+							<button type="button" class="btn ch-altered btn-default" ng-click="post_topic()">POST</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+</div>
+
+	<script src="./external/jquery-2.1.1.min.js"></script>
+	<script src="./external/bootstrap.min.js"></script>
+		
+	<script src="./external/angular.min.js"></script>
+	<script src="blog_index.js"></script>
+	<script src="chatter.js"></script>
+		
+	<script>
+		
+	</script>
+
+</body>
+	
+</html>

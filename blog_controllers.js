@@ -83,14 +83,19 @@ ISDCBlogDApp.controller('BlogController', function ($scope, myBlog, breadcrumbSe
 
 	$scope.breadcrumb_locations = function () { return breadcrumbService.get_locations(); };
 
-	$scope.back_to_article_list = function () {
-		isdcng_blog.slide_up_disappear(document.getElementById('main-article'), function () {
-			isdcng_blog.slide_down_appear(document.getElementById('main-article-list'));
+	var back_to_list_factory = function (current_ele_id) {
+		return function () {
+			isdcng_blog.slide_up_disappear(document.getElementById(current_ele_id), function () {
+				isdcng_blog.slide_down_appear(document.getElementById('main-article-list'));
 
-			$scope.breadcrumbService.set_locations($scope.breadcrumbService.get_nav_article_list());
-			$scope.$apply();
-		});
+				$scope.breadcrumbService.set_locations($scope.breadcrumbService.get_nav_article_list());
+				$scope.$apply();
+			});
+		}
 	};
+
+	$scope.back_to_article_list = back_to_list_factory('main-article');
+	$scope.new_article_back_to_article_list = back_to_list_factory('page-new-article');
 	
 	$scope.switch_newessay_to_list = function () {
 		isdcng_blog.slide_up_disappear(document.getElementById('page-new-article'), function () {
@@ -168,13 +173,10 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 	$scope.current_page = 1;
 
 	// ARTICLE LIST - one col || tow col?
-	$scope.display_mode = "TWO_COLUMN";
+	$scope.display_mode = "ONE_COLUMN";
 
-	$scope.is_two_column = function () {
-		return $scope.display_mode === "TWO_COLUMN"; };
-
-	$scope.is_one_column = function () {
-		return $scope.display_mode === "ONE_COLUMN"; };
+	$scope.is_two_column = function () { return $scope.display_mode === "TWO_COLUMN"; };
+	$scope.is_one_column = function () { return $scope.display_mode === "ONE_COLUMN"; };
 
 	$scope.switch_numcol = function (val) {
 		switch (val) {
@@ -185,8 +187,7 @@ ISDCBlogDApp.controller('MainArticleListController', function ($scope, $rootScop
 		}
 	};
 
-	$scope.get_current_page = function () {
-		return $scope.current_page; };
+	$scope.get_current_page = function () { return $scope.current_page; };
 
 	$scope.prev_page = function () {
 		if ($scope.current_page != 1)
@@ -225,6 +226,20 @@ ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesServi
 	$scope.current_article = function () {
 		return articlesService.cache_article_details[$scope.current_article_id]; };
 
+	$scope.like_onclick = function () {
+		if (!$scope.current_article().liked_by_self) {
+			articlesService.like_article($scope.current_article_id, true);
+		} else {
+			articlesService.like_article($scope.current_article_id, false); }
+	};
+	
+	$scope.dislike_onclick = function () {
+		if (!$scope.current_article().disliked_by_self) {
+			articlesService.dislike_article($scope.current_article_id, true);
+		} else {
+			articlesService.dislike_article($scope.current_article_id, false); }
+	};
+
 	// TODO: Post Article
 	$scope.post_comment = function () {
 		var data = {
@@ -249,6 +264,13 @@ ISDCBlogDApp.controller('MainArticleController', function ($scope, articlesServi
 });
 
 ISDCBlogDApp.controller('NewArticleController', function ($scope, $http) {
+	
+	$scope.tags = [ ];
+	
+	$scope.add_tag = function () {
+		$scope.tags.push($('#page-new-article-tag-input').val());	
+		document.getElementById('page-new-article-tag-input').value = '';
+	};
 	
 	$scope.generate_n_split = function (text) {
 		// TODO: this is a setting option to be customized
@@ -298,7 +320,8 @@ ISDCBlogDApp.controller('NewArticleController', function ($scope, $http) {
 			var data = {
 				title : document.getElementById('text-title').value,
 				title_secondary : document.getElementById('text-second-title').value,
-				paragraphs : [ ]
+				paragraphs : [ ],
+				tags : $scope.tags
 			};
 			$('#page-new-article-preview-paragraphs > .page-new-article-preview-paragraph').each(function (index, element) {
 				data.paragraphs.push(element.innerHTML); });

@@ -25,6 +25,11 @@ ISDCBlogRSampleModule.service('articlesService', function ($http, $q, $rootScope
 			t.title_secondary = article.title_secondary;
 			t.author_name = article.author_name;
 			t.category = article.tags;
+			
+			t.liked_by_self = article.liked_by_self;
+			t.disliked_by_self = article.disliked_by_self;
+			t.count_liker = article.count_liker;
+			t.count_disliker = article.count_disliker;
 
 			ret.push(t);
 		}
@@ -56,6 +61,23 @@ ISDCBlogRSampleModule.service('articlesService', function ($http, $q, $rootScope
 					cache_article_details[article_id] = data;
 				});
 	};
+	
+	var update_like_dislike_factory = function (url_seg) {
+		return function (article_id, toggle) {
+			var func_success = function (data, status, header, config) {
+				cache_article_details[article_id] = data; };
+		
+			if (toggle) {
+				$http.post('/articles/' + article_id + '/' + url_seg)
+					.success(func_success);
+			} else {
+				$http.delete('/articles/' + article_id + '/' + url_seg)
+					.success(func_success); }
+		};
+	}
+	
+	var like_article = update_like_dislike_factory('like');
+	var dislike_article = update_like_dislike_factory('dislike');
 
 	update_list();
 
@@ -64,6 +86,8 @@ ISDCBlogRSampleModule.service('articlesService', function ($http, $q, $rootScope
 		article_list: article_list,
 		article_detail: article_detail,
 		cache_article_details: cache_article_details,
+		like_article: like_article,
+		dislike_article: dislike_article
 	};
 
 });

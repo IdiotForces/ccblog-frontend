@@ -120,7 +120,7 @@
 			<div class="ui center aligned header">
 <!--				<icon class="circular user"></icon>-->
 				<div><img id="sidebar-avatar" src="./assets/placeholder.png" /></div>
-				<div class="ui active button" ng-show="!logged_in()" ng-click="login_modalshow()">Login</div>
+				<div class="ui active button" ng-show="!logged_in()" ng-click="login_modalshow()" style="margin-bottom: 1em;">Login</div>
 				<div class="ui horizontal divider" ng-show="logged_in()">{{ user_name() }}</div>
 				<div class="sidebar-second-usert" ng-show="logged_in()">FOUNDATION</div>
 				<div class="sidebar-ops" ng-show="logged_in()">
@@ -183,22 +183,40 @@
 					<div class="field no-clear">
 						<input type="text" name="secondary-title" id="text-second-title" placeholder="Secondary Title" />
 					</div>
+					
+					<div class="field no-clear">
+						<div class="fields">
+							<field class="five wide">
+								<div class="ui action icon input">
+									<input type="text" id="page-new-article-tag-input" placeholder="Add tags ..." >
+									<button class="ui icon button" ng-click="add_tag()"><icon class="add"></icon></button>
+								</div>
+							</field>
+							<field>
+								<div id="page-new-article-tags-inner-wrapper">
+									<div class="ui label" ng-repeat="tag in tags">
+										{{ tag }}
+										<icon class="delete" ng-click="tags.splice($index, 1)"></icon>
+									</div>
+								</div>
+							</field>
+						</div>
+					</div>
+					
 					<div class="ui horizontal divider no-clear aft-no-clear">Content</div>
 					<div class="field no-clear">
 						<textarea id='page-new-article-content'></textarea>
 					</div>
 					<div class="ui menu">
-						<div class="item">
-							FOUNDATION
-						</div>
+						<a class="item" ng-click="new_article_back_to_article_list()">
+							<icon class="angle left"></icon> BACK
+						</a>
 						<div class="right menu">
 							<a class="item" href="" ng-click="showPreview()">
-								<icon class="circle thin"></icon>
-								PREVIEW
+								<icon class="circle thin"></icon> PREVIEW
 							</a>
 							<a class="item" href="" ng-click="post_article_onclick()">
-								POST
-								<icon class="angle right"></icon>
+								POST <icon class="angle right"></icon>
 							</a>
 						</div>
 					</div>
@@ -218,12 +236,12 @@
 					<a class="item" ng-click="back_to_article_list()">
 						<icon class="angle left"></icon> Back
 					</a>
-					<div class="ui right text menu context-ops">
-						<a class="item">
-							<icon class="thumbs up"></icon> Like
+					<div class="ui text right menu context-ops">
+						<a class="item" ng-click="like_onclick()" ng-class="{ 'active': current_article().liked_by_self, 'disabled': current_article().disliked_by_self }">
+							<icon class="thumbs up" ng-class="{ 'red': current_article().liked_by_self }"></icon> Like <span>{{ current_article().count_liker }}</span>
 						</a>
-						<a class="item">
-							<icon class="thumbs down"></icon> Dislike
+						<a class="item" ng-click="dislike_onclick()" ng-class="{ 'active': current_article().disliked_by_self, 'disabled': current_article().liked_by_self }">
+							<icon class="thumbs down" ng-class="{ 'red': current_article().disliked_by_self }"></icon> Dislike <span>{{ current_article().count_disliker }}</span>
 						</a>
 					</div>
 				</div>
@@ -253,11 +271,11 @@
 						<icon class="angle left"></icon> Back
 					</a>
 					<div class="ui text right menu context-ops">
-						<a class="item">
-							<icon class="thumbs up"></icon> Like
+						<a class="item" ng-click="like_onclick()" ng-class="{ 'active': current_article().liked_by_self, 'disabled': current_article().disliked_by_self }">
+							<icon class="thumbs up" ng-class="{ 'red': current_article().liked_by_self }"></icon> Like <span>{{ current_article().count_liker }}</span>
 						</a>
-						<a class="item">
-							<icon class="thumbs down"></icon> Dislike
+						<a class="item" ng-click="dislike_onclick()" ng-class="{ 'active': current_article().disliked_by_self, 'disabled': current_article().liked_by_self }">
+							<icon class="thumbs down" ng-class="{ 'red': current_article().disliked_by_self }"></icon> Dislike <span>{{ current_article().count_disliker }}</span>
 						</a>
 					</div>
 				</div>
@@ -329,7 +347,7 @@
 
 				</menu-item>
 				
-				<div class="right menu">
+				<div class="right menu" ng-show="logged_in()">
 					<div class="ui item">
 						<div class="ui menu">
 							<a class="ui icon item" ng-click="switch_list_to_newessay()">

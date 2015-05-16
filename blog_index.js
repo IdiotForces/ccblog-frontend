@@ -1,7 +1,7 @@
 /* global CryptoJS */
 /// <reference path="typings/jquery/jquery.d.ts"/>
 
-$('.ui.accordion').accordion();
+// $('.ui.accordion').accordion();
 
 var isdcng_blog = { };
 
@@ -82,17 +82,21 @@ isdcng_blog.slide_show_default = function (element) {
 isdcng_blog.slide_up_disappear = function (element, callback) {
 	var that = this;
 
-	this.add_class(element, 'y-hidden-transition');
-	element.style.maxHeight = this.get_element_height(element) + 'px';
-	console.log('slide disappear, element height', element.style.maxHeight);
+	this.remove_class(element, 'y-hidden-transition');
+	// WHAT THE FUUUUUUCK!
 	setTimeout(function () {
-		that.add_class(element, ['y-overflow-hidden', 'y-hidden']);
-	}, 10);
+		element.style.maxHeight = that.get_element_height(element) + 'px';
+		setTimeout(function () {
+			that.add_class(element, 'y-hidden-transition');
+			setTimeout(function () {
+				that.add_class(element, ['y-overflow-hidden', 'y-hidden']);
+			}, 10); }, 10); }, 10);
+	
 	setTimeout(function () {
 		element.style.display = 'none';
 		element.style.maxHeight = isdcng_blog.settings.max_height_with_px();
 		if (callback) callback();
-	}, 1100);
+	}, 1001);
 };
 
 isdcng_blog.slide_down_appear = function (element, callback) {
@@ -106,12 +110,12 @@ isdcng_blog.slide_down_appear = function (element, callback) {
 	element.style.maxHeight = '0px';
 	setTimeout(function () {
 		element.style.maxHeight = height_org+'px';
-	}, 100);
+	}, 1);
 	setTimeout(function () {
 		that.remove_class(element, 'y-overflow-hidden');
 		element.style.maxHeight = isdcng_blog.settings.max_height_with_px();
 		if (callback) callback();
-	}, 1100);
+	}, 1001);
 };
 
 // stackoverflow.com/questions/22119673/find-the-closest-ancestor-element-that-has-a-specific-class
@@ -228,3 +232,18 @@ isdcng_blog.para_toggle_combox = function (paragraph) {
 
 isdcng_blog.encrypt = function (src) {
 	return CryptoJS.SHA3(src.toString()).toString(); };
+	
+// stackoverflow.com/questions/12534238/updating-javascript-object-attributes-from-another-object
+isdcng_blog.update_obj = function (src /*, ... */) {
+	for (var i = 1; i < arguments.length; i++) {
+		for (var prop in arguments[i]) {
+			var val = arguments[i][prop];
+			if (typeof val == 'object') {
+				if (!(prop in src)) src[prop] = val;
+				else this.update_obj(src[prop], val);
+			}
+			else src[prop] = val;
+		}
+	}
+	return src;
+};

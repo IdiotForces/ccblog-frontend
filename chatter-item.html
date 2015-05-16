@@ -1,0 +1,32 @@
+<div class="ch-accordion-wrapper" ng-repeat="post in databuf[rootid].children">
+	<div class="ch-tooltip-flexwrap ch-center">
+		<div class="ch-tooltip-box ch-center remove-onclick" style="min-width: 24em;">
+			<div class="ch-tooltip-header">Post A Message</div>
+			<div class="ch-tooltip-content">
+				<div class="ch-col-input-group no-radius">
+					<input type="text" class="form-control ch-input ch-postopic-title" placeholder="Title" />
+					<textarea class="form-control ch-input ch-postopic-content" rows="8" placeholder="Content"></textarea>
+				</div>
+			</div>
+			<div class="ch-tooltip-footer ch-row-input-group">
+				<button class="ch-input" ng-click="reply_cancel($event)">CANCEL</button>
+				<button class="ch-input" ng-click="post_message($event, post)">POST</button>
+			</div>
+		</div>
+	</div>
+	
+	<div class="ch-accordion-header-wrapper" ng-click="fetch_detail(post)">
+		<div class="ch-accordion-header hover-visible-cp">{{ post.title }}
+			<div class="right-floated ch-accordion-header-icongrp">
+				<span class="ch-accordion-header-icon ch-inline hover-visible-c glyphicon glyphicon-plus" ng-click="toggle_reply($event)"></span>
+				<span class="ch-accordion-header-icon ch-inline hover-visible-c glyphicon glyphicon-remove" ng-click="remove(post)"></span>
+			</div>
+		</div>
+	</div>
+	<div class="ch-accordion-content-wrapper">
+		<div class="ch-accordion-content">
+			<div class="ch-message-content" ng-show="post.content">{{ post.content }}</div>
+			<chatter-panel databuf="databuf" rootid="post.id" eventhandler="eventhandler" nodeid="nodeid"></chatter-panel>
+		</div>
+	</div>
+</div>
