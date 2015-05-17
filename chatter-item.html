@@ -15,7 +15,7 @@
 		</div>
 	</div>
 	
-	<div class="ch-accordion-header-wrapper" ng-click="fetch_detail(post)">
+	<div class="ch-accordion-header-wrapper" ng-click="fetch_detail(post, $event)">
 		<div class="ch-accordion-header hover-visible-cp">{{ post.title }}
 			<div class="right-floated ch-accordion-header-icongrp">
 				<span class="ch-accordion-header-icon ch-inline hover-visible-c glyphicon glyphicon-plus" ng-click="toggle_reply($event)"></span>
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 	<div class="ch-accordion-content-wrapper">
-		<div class="ch-accordion-content">
+		<div class="ch-accordion-content" style="overflow-x: visible;">
 			<div class="ch-message-content" ng-show="post.content">{{ post.content }}</div>
 			<chatter-panel databuf="databuf" rootid="post.id" eventhandler="eventhandler" nodeid="nodeid"></chatter-panel>
 		</div>

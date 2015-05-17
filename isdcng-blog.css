@@ -295,7 +295,6 @@ body {
 }
 
 .y-overflow-hidden {
-	/*overflow-x: visible !important;*/
 	overflow-y: hidden  !important;
 }
 

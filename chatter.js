@@ -27,8 +27,11 @@ ISDChatterApp.directive("chatterPanel", function (RecursionHelper) {
 		compile: function (element) {
 			return RecursionHelper.compile(element, this); },
 		controller: function ($scope, $http) {
-			$scope.fetch_detail = function (post) {
-				$scope.eventhandler(post.id); };
+			$scope.fetch_detail = function (post, $event) {
+				$scope.eventhandler(post.id, function () {
+					$($event.currentTarget).parent().chaccordion_toggle(); });
+				$event.stopPropagation();
+			};
 			$scope.remove = function (post) {
 				$http.delete('/chatter/node/' + $scope.nodeid + '/chat?id=' + post.id).success(function (data, status, header, config) {
 					$scope.databuf[post.parent_id].children.splice($scope.databuf[post.parent_id].children.indexOf(post), 1); });
@@ -76,7 +79,7 @@ ISDChatterApp.controller('ISDCNgChatterRootController', function ($scope, $http)
 	
 	$scope.current_nodeid = undefined;
 	
-	$scope.fetch_message_detail = function (msgid) {
+	$scope.fetch_message_detail = function (msgid, callback) {
 		$http.get('/chatter/node/' + $scope.current_nodeid + '/chat?id=' + msgid).success(function (data, status, header, config) {
 			if (msgid in $scope.data) {
 				isdcng_blog.update_obj($scope.data[msgid], data);
@@ -87,6 +90,7 @@ ISDChatterApp.controller('ISDCNgChatterRootController', function ($scope, $http)
 					isdcng_blog.update_obj($scope.data[element.id], element);
 				else $scope.data[element.id] = element;
 			});
+			callback();
 		});
 	};
 	
